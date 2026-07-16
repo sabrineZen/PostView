@@ -1,9 +1,10 @@
 import React from 'react';
-import { HiSparkles,HiOutlineUsers, HiOutlineChartBar} from "react-icons/hi";
+import { HiSparkles} from "react-icons/hi";
 import LandingNavbar from '../components/layouts/landingNavbar.jsx';
-import Button from '../components/layouts/Button.jsx'
+import Button from '../components/ui/Button.jsx'
 import posts from '../assets/posts.png'
 import communaute from '../assets/communaute.png'
+import Cards  from '../components/cards.jsx';
 function Landing() {
   return (
     <div className="relative min-h-screen bg-[#0B0B0F] overflow-hidden pb-10">
@@ -41,39 +42,7 @@ function Landing() {
           />
         
       {/* Statistiques */}
-      <div className="flex justify-center gap-16 mt-40 flex-wrap">
-
-        {/* Créateurs actifs */}
-        <div className="w-120 h-52 rounded-2xl border border-[#2A2A35] bg-[#17171F] flex flex-col items-center justify-center">
-
-          <HiOutlineUsers className="text-3xl text-violet-500 mb-4" />
-
-          <h2 className="text-5xl font-bold text-white font-outfit">
-            84K+
-          </h2>
-
-          <p className="text-gray-400 font-outfit mt-2">
-            Créateurs actifs
-          </p>
-
-        </div>
-
-        {/* Posts publiés */}
-        <div className="w-120 h-52 rounded-2xl border border-[#2A2A35] bg-[#17171F] flex flex-col items-center justify-center">
-
-          <HiOutlineChartBar className="text-3xl text-violet-500 mb-4" />
-
-          <h2 className="text-5xl font-bold text-white font-outfit">
-            2M+
-          </h2>
-
-          <p className="text-gray-400 font-outfit mt-2">
-            Posts publiés
-          </p>
-
-        </div>
-
-      </div>
+      <Cards/>
       {/*ce que l appli a */}
       <div className="flex justify-center gap-6 mt-24 flex-wrap">
 

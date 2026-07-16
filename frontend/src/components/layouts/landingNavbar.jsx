@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { HiOutlineMenu, HiOutlineX } from "react-icons/hi";
 import logo from "../../assets/logo.svg";
-import Button from "../layouts/Button.jsx";
+import Button from "../ui/Button.jsx";
 
 function LandingNavbar() {
   const [isOpen, setIsOpen] = useState(false);

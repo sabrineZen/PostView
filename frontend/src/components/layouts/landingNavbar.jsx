@@ -2,9 +2,14 @@ import { useState } from "react";
 import { HiOutlineMenu, HiOutlineX } from "react-icons/hi";
 import logo from "../../assets/logo.svg";
 import Button from "../ui/Button.jsx";
+import {useNavigate} from "react-router-dom";
+
 
 function LandingNavbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate();
+  const loginNavigate=()=>navigate("/login")
+  const registerNavigate=()=>navigate("/register")
 
   return (
     <>
@@ -29,13 +34,13 @@ function LandingNavbar() {
           <Button className="rounded-xl"
             text="Connexion "
             color="bg-[#0B0B0F]"
-            onClick={() => {}}
+            onClick= {loginNavigate}
           />
 
           <Button className="rounded-xl"
             text="S'inscrire"
             color="bg-violet-500"
-            onClick={() => {}}
+            onClick= {registerNavigate}
           />
         </div>
 

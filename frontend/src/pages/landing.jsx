@@ -5,7 +5,10 @@ import Button from '../components/ui/Button.jsx'
 import posts from '../assets/posts.png'
 import communaute from '../assets/communaute.png'
 import Cards  from '../components/cards.jsx';
+import { useNavigate } from 'react-router-dom';
 function Landing() {
+  const navigate=useNavigate();
+  const loginNavigate=()=>navigate("/login")
   return (
     <div className="relative min-h-screen bg-[#0B0B0F] overflow-hidden pb-10">
 
@@ -38,7 +41,7 @@ function Landing() {
        <Button className=" rounded-2xl mt-10 h-15 text-xl font-outfit w-90 font-semibold "
             text="Commencer maintenant →"
             color="bg-violet-500 hover:bg-violet-600"
-            onClick={() => {}}
+            onClick={loginNavigate}
           />
         
       {/* Statistiques */}

@@ -38,10 +38,10 @@ function LoginForm() {
         <p className="flex self-start">Password</p>
         <Inputs 
           type="password" 
-          placeholder=""
+          placeholder="......."
         />
       </div>
-      <Button className="rounded-xl mt-6 w-full h-12"
+      <Button className="rounded-xl mt-6 w-full h-12  transition-300 hover:bg-violet-600 "
         text="Se connecter"
         color="bg-violet-500"
       />

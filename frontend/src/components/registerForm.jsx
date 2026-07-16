@@ -49,7 +49,7 @@ function RegisterForm() {
           placeholder="........."
         />
       </div>
-      <Button className="rounded-xl mt-6  w-full h-12"
+      <Button className="rounded-xl mt-6  w-full h-12 transition-300 hover:bg-violet-600"
         text="créer mon compte"
         color="bg-violet-500"
       />

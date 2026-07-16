@@ -31,6 +31,9 @@ function Landing() {
           <br /> échanger et découvrir de nouvelles idées.
         </p>
       </div>
+      {/*lumiere violette */}
+       <div className="absolute top-160 right-0 w-[500px] h-[500px] rounded-full bg-violet-600 blur-[180px] opacity-30">
+      </div>
        <Button className=" rounded-2xl mt-10 h-15 text-xl font-outfit w-90 font-semibold "
             text="Commencer maintenant →"
             color="bg-violet-500 hover:bg-violet-600"

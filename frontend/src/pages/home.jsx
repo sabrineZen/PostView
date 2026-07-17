@@ -1,6 +1,7 @@
 import HomeNavbar from "../components/layouts/homeNavbar";
 import RightSideBar from "../components/layouts/rightSideBar";
 import Post from "../components/post";
+import CreatePost from "../components/createPost";
 
 function Home() {
   return (
@@ -19,10 +20,7 @@ function Home() {
           <div className="w-full max-w-[720px]">
 
             {/* Créer un post */}
-            <div className="rounded-2xl bg-[#18181F] p-5">
-              Create Post
-            </div>
-
+                <CreatePost/>
             {/* Feed */}
             <div className="mt-6 flex flex-col gap-6">
               <Post />
@@ -36,10 +34,9 @@ function Home() {
         </main>
 
         {/* Sidebar droite */}
-        <aside className="hidden xl:flex w-80 justify-center bg-violet-500 ">
-          <RightSideBar />
-        </aside>
-
+        <aside className="hidden xl:flex fixed top-8 right-8 w-80 mr-40">
+  <RightSideBar />
+</aside>
       </div>
 
     </div>

@@ -7,7 +7,7 @@ import {
 
 function Post() {
   return (
-    <article className="w-full rounded-2xl bg-[#18181F] p-5 shadow-lg">
+    <article className="w-full rounded-2xl bg-[#18181F] p-5 shadow-lg border border-gray-800">
 
       {/* Header */}
       <div className="flex items-start justify-between">

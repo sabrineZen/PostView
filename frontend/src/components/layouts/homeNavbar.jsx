@@ -8,7 +8,9 @@ import {
 import { NavLink } from "react-router-dom";
 import logo from "../../assets/logo.svg";
 function HomeNavbar() {
+
   return (
+    
     <nav className="fixed   flex h-screen w-90 flex-col justify-between  p-8 text-white">
 
       {/* Haut */}
@@ -56,11 +58,22 @@ function HomeNavbar() {
             <HiBell className="text-2xl" />
             <span>Notifications</span>
           </li>
-
-          <li className="flex cursor-pointer items-center gap-4 rounded-xl p-4 transition hover:bg-[#1A1A22] hover:text-violet-500">
-            <HiUser className="text-2xl" />
-            <span>Mon profil</span>
-          </li>
+                {/*profil */}
+          <li>
+                <NavLink
+                    to="/profil"
+                    className={({ isActive }) =>
+                    `flex items-center gap-4 rounded-xl p-4 transition ${
+                        isActive
+                        ? "text-violet-500 bg-[#1A1A22]"
+                        : "text-white hover:bg-[#1A1A22] hover:text-violet-500"
+                    }`
+                    }
+                >
+                    <HiUser className="text-2xl" />
+                    <span>Mon profil</span>
+                </NavLink>
+            </li>
 
         </ul>
 

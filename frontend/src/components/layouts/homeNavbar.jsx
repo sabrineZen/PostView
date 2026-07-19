@@ -7,6 +7,7 @@ import {
 } from "react-icons/hi";
 import { NavLink } from "react-router-dom";
 import logo from "../../assets/logo.svg";
+import Search from "../../pages/search";
 function HomeNavbar() {
 
   return (
@@ -49,10 +50,21 @@ function HomeNavbar() {
             </NavLink>
             </li>
             {/*recherche */}
-          <li className="flex cursor-pointer items-center gap-4 rounded-xl p-4 transition hover:bg-[#1A1A22] hover:text-violet-500">
-            <HiSearch className="text-2xl" />
-            <span>Recherche</span>
-          </li>
+          <li>
+                <NavLink
+                    to="/search"
+                    className={({ isActive }) =>
+                    `flex items-center gap-4 rounded-xl p-4 transition ${
+                        isActive
+                        ? "text-violet-500 bg-[#1A1A22]"
+                        : "text-white hover:bg-[#1A1A22] hover:text-violet-500"
+                    }`
+                    }
+                >
+                    <HiUser className="text-2xl" />
+                    <span>recherche</span>
+                </NavLink>
+            </li>
 
           <li className="flex cursor-pointer items-center gap-4 rounded-xl p-4 transition hover:bg-[#1A1A22] hover:text-violet-500">
             <HiBell className="text-2xl" />

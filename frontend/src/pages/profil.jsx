@@ -54,7 +54,7 @@ function Profil() {
                 <p className="mt-5 text-gray-300 flex self-start">
                     Photographe & designer UI ✨ Paris : je capture la beauté du quotidien
                 </p>
-
+               
                 <div className="mt-6 flex gap-8">
                     <p>
                     <span className="font-bold text-white">12.4k</span>{" "}
@@ -70,15 +70,19 @@ function Profil() {
                     <span className="font-bold text-white">247</span>{" "}
                     <span className="text-gray-400">posts</span>
                     </p>
+                     {/*afficher les vu */}
+                    <p className="mt-4 flex items-center gap-2 text-sm text-gray-400 ">
+                    <span className="font-semibold text-white ">2 354</span> vues du profil ce mois
+                    </p>
                 </div>
             </div>
 
            
             {/* Liste des posts */}
             <div className="mt-8 space-y-6">
-                <Post isProfile ispartager/>
-                <Post isProfile ispartager/>
-                <Post isProfile ispartager />
+                <Post isProfile ispartager iscommentaire/>
+                <Post isProfile ispartager iscommentaire/>
+                <Post isProfile ispartager iscommentaire />
             </div>
 
       </div>

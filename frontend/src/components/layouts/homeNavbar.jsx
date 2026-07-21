@@ -61,17 +61,28 @@ function HomeNavbar() {
                     }`
                     }
                 >
-                    <HiUser className="text-2xl" />
+                    <HiSearch className="text-2xl" />
                     <span>recherche</span>
                 </NavLink>
             </li>
 
-          <li className="flex cursor-pointer items-center gap-4 rounded-xl p-4 transition hover:bg-[#1A1A22] hover:text-violet-500">
-            <HiBell className="text-2xl" />
-            <span>Notifications</span>
-          </li>
-                {/*profil */}
           <li>
+                <NavLink
+                    to="/notification"
+                    className={({ isActive }) =>
+                    `flex items-center gap-4 rounded-xl p-4 transition ${
+                        isActive
+                        ? "text-violet-500 bg-[#1A1A22]"
+                        : "text-white hover:bg-[#1A1A22] hover:text-violet-500"
+                    }`
+                    }
+                >
+                    <HiBell className="text-2xl" />
+                    <span>notifications</span>
+                </NavLink>
+            </li>
+                {/*profil */}
+           <li>
                 <NavLink
                     to="/profil"
                     className={({ isActive }) =>

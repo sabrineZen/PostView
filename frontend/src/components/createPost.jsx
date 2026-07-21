@@ -9,16 +9,17 @@ function CreatePost() {
       {/* Haut */}
       <div className="flex items-start gap-4">
 
+        {/* Photo de profil */}
         <img
           src={posts}
           alt="Profil"
-          className="h-12 w-12 rounded-full object-cover border-2 border-violet-500"
+          className="h-12 w-12 rounded-full border-2 border-violet-500 object-cover"
         />
 
         {/* Zone de texte */}
         <textarea
           placeholder="Quoi de neuf ?"
-          className="h-20 w-full resize-none bg-transparent text-white placeholder:text-gray-500 outline-none"
+          className="h-20 w-full resize-none bg-transparent text-white outline-none placeholder:text-gray-500"
         />
 
       </div>
@@ -27,10 +28,18 @@ function CreatePost() {
 
       <div className="flex items-center justify-between">
 
-        <button className="text-gray-500 transition hover:text-violet-400">
+        {/* Ajouter une image */}
+        <label className="cursor-pointer text-gray-500 transition hover:text-violet-400">
           <HiPhotograph className="text-2xl" />
-        </button>
 
+          <input
+            type="file"
+            accept="image/*"
+            className="hidden"
+          />
+        </label>
+
+        {/* Publier */}
         <Button
           text="Publier"
           className="h-11 w-32 rounded-xl font-semibold"

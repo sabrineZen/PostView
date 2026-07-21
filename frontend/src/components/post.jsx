@@ -21,7 +21,7 @@ function Post({ isProfile = false, ispartager = false ,iscommentaire=false}) {
             <div className="h-12 w-12 rounded-full bg-violet-500"></div>
 
             <div>
-              <h3 className="font-semibold text-white">John Doe</h3>
+              <h3 className="font-semibold text-white flex self-start">John Doe</h3>
               <p className="text-sm text-gray-400">
                 @johndoe • Il y a 2 h
               </p>

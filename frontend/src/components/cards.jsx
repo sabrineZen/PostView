@@ -1,5 +1,22 @@
 import {HiOutlineUsers, HiOutlineChartBar} from "react-icons/hi"
+import { useState, useEffect } from 'react';
 function Cards(){
+    //recuperer le nombre d'utilisateurs
+  const [numberOfUsers, setNumberOfUsers] = useState(0);
+  useEffect(() => {
+    const fetchNumberOfUsers = async () => {
+      try {
+        const response = await fetch("http://localhost:5000/api/users/number");
+        const data = await response.json();
+        setNumberOfUsers(data.numberOfUsers);
+      } catch (error) {
+        console.error("Erreur lors de la récupération du nombre d'utilisateurs :", error);
+      }
+    };
+
+    fetchNumberOfUsers();
+  }, []);
+
     return(
     
 
@@ -11,7 +28,7 @@ function Cards(){
                   <HiOutlineUsers className="text-3xl text-violet-500 mb-4" />
         
                   <h2 className="text-5xl font-bold text-white font-outfit">
-                    84K+
+                    {numberOfUsers.toLocaleString()}
                   </h2>
         
                   <p className="text-gray-400 font-outfit mt-2">

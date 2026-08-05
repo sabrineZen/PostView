@@ -6,7 +6,10 @@ import posts from '../assets/posts.png'
 import communaute from '../assets/communaute.png'
 import Cards  from '../components/cards.jsx';
 import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+
 function Landing() {
+
   const navigate=useNavigate();
   const loginNavigate=()=>navigate("/login")
   return (

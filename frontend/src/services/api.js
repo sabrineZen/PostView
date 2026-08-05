@@ -41,5 +41,15 @@ const login = async (email, password) => {
     data,
   };
 };
-
-export { register, login };
+//partie users
+const numberOfUsers = async () => {
+  const response = await fetch(`${API_URL}/users/number`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  const data = await response.json();
+  return data;
+};
+export { register, login, numberOfUsers };

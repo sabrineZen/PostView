@@ -1,8 +1,6 @@
-import Landing from "../pages/landing";
 import { useNavigate } from "react-router-dom";
 import Inputs from "./ui/inputs";
 import Button from "./ui/Button";
-import Login from "../pages/login";
 import { register } from "../services/api";
 import { useState } from "react";
 function RegisterForm() {
@@ -15,9 +13,9 @@ function RegisterForm() {
 
   const handleRegister = async () => {
     try {
-      const data = await register(nom, email, password);
-      console.log(data);
+      await register(nom, email, password);
       setError("");
+      navigate("/login");
     } catch (err) {
       setError(err?.message || err || "Erreur lors de l'inscription");
       console.error(err);

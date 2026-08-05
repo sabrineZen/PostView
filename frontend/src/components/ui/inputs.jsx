@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { HiEye, HiEyeOff } from "react-icons/hi";
 
-function Inputs({ type, placeholder }) {
+function Inputs({ type, placeholder, value, onChange }) {
 
   const [showPassword, setShowPassword] = useState(false);
 
@@ -13,6 +13,8 @@ function Inputs({ type, placeholder }) {
       <input
         type={isPassword && showPassword ? "text" : type}
         placeholder={placeholder}
+        value={value}
+        onChange={onChange}
         className="w-full h-12 rounded-lg bg-[#18181F] px-4 pr-12 text-white border border-transparent focus:border-violet-500 outline-none "
       />
 

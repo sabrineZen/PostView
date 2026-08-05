@@ -3,9 +3,26 @@ import { useNavigate } from "react-router-dom";
 import Inputs from "./ui/inputs";
 import Button from "./ui/Button";
 import Login from "../pages/login";
+import { register } from "../services/api";
+import { useState } from "react";
 function RegisterForm() {
-  const navigate=useNavigate();
-  const loginNavigate=()=>navigate("/login")
+  const navigate = useNavigate();
+  const loginNavigate = () => navigate("/login");
+  const [nom, setNom] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+
+  const handleRegister = async () => {
+    try {
+      const data = await register(nom, email, password);
+      console.log(data);
+      setError("");
+    } catch (err) {
+      setError(err?.message || err || "Erreur lors de l'inscription");
+      console.error(err);
+    }
+  };
   return (
     <div className="w-full max-w-lg p-8  ">
 
@@ -31,6 +48,8 @@ function RegisterForm() {
         <Inputs 
           type="text" 
           placeholder="monpseudo"
+          value={nom}
+          onChange={(e)=>setNom(e.target.value)}
         />
       </div>
         {/*email */}
@@ -39,6 +58,8 @@ function RegisterForm() {
         <Inputs 
           type="email" 
           placeholder="moi@exemple.com"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
         />
       </div>
       {/*motpasse */}
@@ -47,9 +68,15 @@ function RegisterForm() {
         <Inputs 
           type="password" 
           placeholder="........."
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
         />
       </div>
-      <Button className="rounded-xl mt-6  w-full h-12 transition-300 hover:bg-violet-600"
+      {error && (
+        <p className="mt-6 text-sm text-red-500">{error}</p>
+      )}
+      <Button className="rounded-xl mt-4 w-full h-12 transition-300 hover:bg-violet-600"
+        onClick={handleRegister}
         text="créer mon compte"
         color="bg-violet-500"
       />

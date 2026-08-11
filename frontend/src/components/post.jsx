@@ -1,128 +1,124 @@
 import { useState } from "react";
-import {
-  HiHeart,
-  HiChat,
-  HiShare,
-  HiDotsHorizontal,
-} from "react-icons/hi";
+import { HiHeart, HiChat, HiShare, HiDotsHorizontal } from "react-icons/hi";
 
-function Post({ isProfile = false, ispartager = false ,iscommentaire=false}) {
+function Post({ post, isProfile = false, ispartager = false, iscommentaire = false }) {
   const [showComments, setShowComments] = useState(false);
+
+  const safePost = post || {};
+  const content = safePost.contenu || safePost.content || "Aucun contenu pour le moment.";
+  const imageName = safePost.image || safePost.Image || null;
+  const imageUrl = imageName
+    ? imageName.startsWith("http")
+      ? imageName
+      : `http://localhost:5000/uploads/${imageName}`
+    : null;
+
+  const authorName =
+    safePost.author?.nom || safePost.User?.nom || safePost.utilisateur?.nom || "John Doe";
+  const authorHandle =
+    safePost.author?.username || safePost.User?.username || safePost.utilisateur?.username || "@johndoe";
+  const createdAt = safePost.createdAt
+    ? new Date(safePost.createdAt).toLocaleString("fr-FR", {
+        day: "2-digit",
+        month: "short",
+        hour: "2-digit",
+        minute: "2-digit",
+      })
+    : "Il y a 2 h";
+
+  const likes = safePost.likesCount ?? safePost.likes ?? 128;
+  const comments = Array.isArray(safePost.commentaires) ? safePost.commentaires : [];
+  const commentsCount = safePost.commentsCount ?? comments.length ?? 34;
 
   return (
     <article className="w-full rounded-2xl border border-gray-800 bg-[#18181F] p-5 shadow-lg">
-
-      {/* Header */}
       {!isProfile && (
         <div className="flex items-start justify-between">
-
           <div className="flex items-center gap-3">
-
-            <div className="h-12 w-12 rounded-full bg-violet-500"></div>
-
-            <div>
-              <h3 className="font-semibold text-white flex self-start">John Doe</h3>
-              <p className="text-sm text-gray-400">
-                @johndoe • Il y a 2 h
-              </p>
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-violet-500 font-semibold text-white">
+              {authorName.charAt(0).toUpperCase()}
             </div>
 
+            <div>
+              <h3 className="flex self-start font-semibold text-white">{authorName}</h3>
+              <p className="text-sm text-gray-400">
+                {authorHandle} • {createdAt}
+              </p>
+            </div>
           </div>
 
-          <button className="text-gray-400 transition hover:text-white">
+          <button className="text-gray-400 transition hover:text-white" aria-label="Options du post">
             <HiDotsHorizontal className="text-2xl" />
           </button>
-
         </div>
       )}
 
-      {/* Contenu */}
       <div className={isProfile ? "" : "mt-5"}>
-        <p className="leading-7 text-gray-200">
-          Aujourd'hui j'ai terminé l'interface de PostView 🚀.
-          Petit à petit le projet prend forme, bientôt le backend !
-        </p>
+        <p className="leading-7 text-gray-200">{content}</p>
       </div>
 
-      {/* Image */}
-      <div className="mt-5 flex h-80 items-center justify-center rounded-xl bg-[#2A2A33]">
-        <span className="text-gray-500">
-          Image du post
-        </span>
-      </div>
+      {imageUrl && (
+        <div className="mt-5 flex h-80 items-center justify-center overflow-hidden rounded-xl bg-[#2A2A33]">
+          <img src={imageUrl} alt="Image du post" className="h-full w-full object-cover" />
+        </div>
+      )}
 
-      {/* Actions */}
       <div className="mt-5 flex items-center justify-between border-t border-[#2A2A33] pt-4">
-
-        {/* Like */}
         <button className="flex items-center gap-2 text-gray-400 transition hover:text-red-500">
           <HiHeart className="text-2xl" />
-          <span>128</span>
+          <span>{likes}</span>
         </button>
 
-        {/* Commentaires */}
         <button
           onClick={() => setShowComments(!showComments)}
           className="flex items-center gap-2 text-gray-400 transition hover:text-violet-500"
         >
           <HiChat className="text-2xl" />
-          <span>34</span>
+          <span>{commentsCount}</span>
         </button>
 
-        {/* Partager */}
         {!ispartager && (
           <button className="flex items-center gap-2 text-gray-400 transition hover:text-green-500">
             <HiShare className="text-2xl" />
             <span>Partager</span>
           </button>
         )}
-
       </div>
 
-      {/* Commentaires */}
       {showComments && (
         <div className="mt-5 border-t border-[#2A2A33] pt-5">
-
-          {/* Ajouter un commentaire */}
-          {!iscommentaire &&(
-
-          <input
-            type="text"
-            placeholder="Écrire un commentaire..."
-            className="w-full rounded-xl bg-[#2A2A33] p-3 text-white outline-none placeholder:text-gray-500"
-          />
+          {!iscommentaire && (
+            <input
+              type="text"
+              placeholder="Écrire un commentaire..."
+              className="w-full rounded-xl bg-[#2A2A33] p-3 text-white outline-none placeholder:text-gray-500"
+            />
           )}
 
-          {/* Liste des commentaires */}
           <div className="mt-6 space-y-5">
+            {comments.length > 0 ? (
+              comments.map((comment, index) => (
+                <div key={comment.id || index} className="flex gap-3">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-violet-500 font-semibold text-white">
+                    {(comment.author?.nom || "U").charAt(0).toUpperCase()}
+                  </div>
 
-            <div className="flex gap-3">
-              <div className="h-10 w-10 rounded-full bg-violet-500"></div>
-
-              <div>
-                <h4 className="font-semibold">Alice</h4>
-                <p className="text-gray-400">
-                  Super projet ! Continue comme ça 🚀
-                </p>
-              </div>
-            </div>
-
-            <div className="flex gap-3">
-              <div className="h-10 w-10 rounded-full bg-violet-500"></div>
-
-              <div>
-                <h4 className="font-semibold">Thomas</h4>
-                <p className="text-gray-400">
-                  Le design est vraiment propre.
-                </p>
-              </div>
-            </div>
-
+                  <div>
+                    <h4 className="font-semibold text-white">
+                      {comment.author?.nom || "Utilisateur"}
+                    </h4>
+                    <p className="text-gray-400">
+                      {comment.contenu || comment.content || " commentaire"}
+                    </p>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <p className="text-sm text-gray-500">Aucun commentaire pour le moment.</p>
+            )}
           </div>
-
         </div>
       )}
-
     </article>
   );
 }

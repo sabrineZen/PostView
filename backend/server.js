@@ -5,6 +5,7 @@ import sequelize from "./config/database.js";
 import "./models/index.js";
 import authRoute from "./routes/authRoute.js";
 import userRoute from "./routes/userRoute.js";
+import postRoute from "./routes/postRoute.js";
 
 dotenv.config();
 
@@ -14,6 +15,7 @@ app.use(express.json());
 app.use(cors());
 app.use("/api/auth", authRoute);
 app.use("/api/users", userRoute);
+app.use("/api/posts", postRoute);
 
 const port = process.env.PORT || 5000;
 
@@ -21,7 +23,7 @@ sequelize
     .authenticate()
     .then(() => {
         console.log("Base de données connectée");
-        return sequelize.sync({ alter: true });
+        return sequelize.sync({ force: false, alter: false });
     })
     .then(() => {
         console.log("Tables créées");

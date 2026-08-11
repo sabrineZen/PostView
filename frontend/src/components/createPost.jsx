@@ -1,8 +1,39 @@
 import { HiPhotograph } from "react-icons/hi";
 import posts from "../assets/posts.png";
 import Button from "./ui/Button";
+import { createPost } from "../services/api";
+import { useState } from "react";
 
 function CreatePost() {
+  const [content, setContent] = useState("");
+  const [image, setImage] = useState(null);
+
+  const handleSubmit = async () => {
+    try {
+      if (!content.trim() && !image) {
+        return;
+      }
+
+      let utilisateurId = null;
+      try {
+        const storedUser = localStorage.getItem("user");
+        if (storedUser) {
+          const parsedUser = JSON.parse(storedUser);
+          utilisateurId = parsedUser?.id ?? null;
+        }
+      } catch (error) {
+        console.error("Impossible de lire l'utilisateur connecté :", error);
+      }
+
+      await createPost(content, image, utilisateurId);
+
+      setContent("");
+      setImage(null);
+    } catch (error) {
+      console.error("Erreur lors de la création du post :", error);
+    }
+  };
+
   return (
     <div className="rounded-2xl border border-[#2A2A33] bg-[#18181F] p-5">
 
@@ -19,6 +50,8 @@ function CreatePost() {
         {/* Zone de texte */}
         <textarea
           placeholder="Quoi de neuf ?"
+          value={content}
+          onChange={(e) => setContent(e.target.value)}
           className="h-20 w-full resize-none bg-transparent text-white outline-none placeholder:text-gray-500"
         />
 
@@ -36,6 +69,7 @@ function CreatePost() {
             type="file"
             accept="image/*"
             className="hidden"
+            onChange={(e) => setImage(e.target.files[0])}
           />
         </label>
 
@@ -44,6 +78,7 @@ function CreatePost() {
           text="Publier"
           className="h-11 w-32 rounded-xl font-semibold"
           color="bg-violet-600 hover:bg-violet-700"
+          onClick={handleSubmit}
         />
 
       </div>

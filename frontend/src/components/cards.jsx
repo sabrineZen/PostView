@@ -1,22 +1,29 @@
 import {HiOutlineUsers, HiOutlineChartBar} from "react-icons/hi"
 import { useState, useEffect } from 'react';
+import { getNumberOfPosts ,getNumberOfUsers} from "../services/api";
 function Cards(){
-    //recuperer le nombre d'utilisateurs
-  const [numberOfUsers, setNumberOfUsers] = useState(0);
+
+    const [numberOfUsers, setNumberOfUsers] = useState(0);
+  const [numberOfPosts, setNumberOfPosts] = useState(0);
+
   useEffect(() => {
-    const fetchNumberOfUsers = async () => {
+    const fetchNumbers = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/users/number");
-        const data = await response.json();
-        setNumberOfUsers(data.numberOfUsers);
+        const usersData = await getNumberOfUsers();
+        const postsData = await getNumberOfPosts();
+
+        setNumberOfUsers(usersData.numberOfUsers);
+        setNumberOfPosts(postsData.postCount);
       } catch (error) {
-        console.error("Erreur lors de la récupération du nombre d'utilisateurs :", error);
+        console.error(
+          "Erreur lors de la récupération des statistiques :",
+          error
+        );
       }
     };
 
-    fetchNumberOfUsers();
+    fetchNumbers();
   }, []);
-
     return(
     
 
@@ -43,7 +50,7 @@ function Cards(){
                   <HiOutlineChartBar className="text-3xl text-violet-500 mb-4" />
         
                   <h2 className="text-5xl font-bold text-white font-outfit">
-                    2M+
+                    {numberOfPosts.toLocaleString()}
                   </h2>
         
                   <p className="text-gray-400 font-outfit mt-2">

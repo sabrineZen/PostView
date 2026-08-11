@@ -2,10 +2,39 @@ import Post from "../components/post";
 import posts from "../assets/posts.png"
 import Button from "../components/ui/Button";
 import Home from "./home";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import {getUserNameById} from "../services/api"
 function Profil() {
   const navigate=useNavigate();
   const HomeNavigate=()=>navigate("/home")
+  const [userName, setUserName] = useState("");
+  //recuperation du nom utilisateur
+  const getuserName = async () => {
+        try {
+            const storedUser = localStorage.getItem("user");
+
+            if (storedUser) {
+                const parsedUser = JSON.parse(storedUser);
+                const userId = parsedUser?.id;
+
+                const data = await getUserNameById(userId);
+                
+
+                setUserName(data.userName);
+
+            }
+        } catch (error) {
+            console.error(
+                "Erreur lors de la récupération du nom d'utilisateur :",
+                error
+            );
+        }
+    };
+
+    useEffect(() => {
+        getuserName();
+    }, []);
   return (
     <div className="min-h-screen bg-[#0B0B0F] text-white flex justify-center py-10">
       <div className="w-full max-w-4xl px-6">
@@ -31,8 +60,8 @@ function Profil() {
                     </div>
 
                     <div>
-                    <h1 className="text-3xl font-bold text-white">sabrine</h1>
-                    <p className="text-violet-300 flex self-start">@sabrine</p>
+                    <h1 className="text-3xl font-bold text-white">{userName}</h1>
+                    <p className="text-violet-300 flex self-start">@{userName}</p>
                     </div>
                 </div>
 

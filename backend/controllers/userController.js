@@ -11,5 +11,14 @@ const getNumberOfUsers = async (req, res) => {
         });
     }
 };
+//recuperer le nom de l'utilisateur
+const getUserNameById=async (req,res)=>{
+    const{ id}=req.params;
+    const user=await Utilisateur.findByPk(id);
+    if(!user){
+        return res.status(404).json({ message: "Utilisateur non trouvé" });
+    }
+    return res.status(200).json({ userName: user.nom });
+}
 
-export { getNumberOfUsers };;
+export { getNumberOfUsers, getUserNameById };;

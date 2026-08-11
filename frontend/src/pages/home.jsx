@@ -2,8 +2,25 @@ import HomeNavbar from "../components/layouts/homeNavbar";
 import RightSideBar from "../components/layouts/rightSideBar";
 import Post from "../components/post";
 import CreatePost from "../components/createPost";
+import { useEffect, useState } from "react";
+import { getAllPosts, createPost } from "../services/api";
 
 function Home() {
+  const [posts, setPosts] = useState([]);
+  const [newPostContent, setNewPostContent] = useState("");
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const data = await getAllPosts();
+        setPosts(data.Posts);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchPosts();
+  }, []);
   return (
     <div className="min-h-screen bg-[#0B0B0F] text-white">
 
@@ -20,13 +37,12 @@ function Home() {
           <div className="w-full max-w-[720px]">
 
             {/* Créer un post */}
-                <CreatePost/>
+            <CreatePost />
             {/* Feed */}
-            <div className="mt-6 flex flex-col gap-6">
-              <Post />
-              <Post />
-              <Post />
-              <Post />
+            <div className="mt-6 flex flex-col gap-6 ">
+              {posts.map((post) => (
+                <Post key={post.id} post={post} />
+              ))}
             </div>
 
           </div>

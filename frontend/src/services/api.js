@@ -42,7 +42,7 @@ const login = async (email, password) => {
   };
 };
 //partie users
-const numberOfUsers = async () => {
+const getNumberOfUsers = async () => {
   const response = await fetch(`${API_URL}/users/number`, {
     method: "GET",
     headers: {
@@ -52,4 +52,62 @@ const numberOfUsers = async () => {
   const data = await response.json();
   return data;
 };
-export { register, login, numberOfUsers };
+const getUserNameById = async (id) => {
+  const response= await fetch(`${API_URL}/users/name/${id}`,{
+    method:"GET",
+    headers:{
+      "content-type":"application/json",
+    },
+  });
+  const data=await response.json();
+  return data;
+} 
+    
+//partie posts
+const getAllPosts=async()=>{
+  const response=await fetch(`${API_URL}/posts/getAllPosts`,{
+    method:"GET",
+    headers:{
+      "content-type":"application/json",
+    },
+  });
+  const data=await response.json();
+  return data;
+} 
+    
+const createPost = async (contenu, image, utilisateurId) => {
+  const formData = new FormData();
+
+  formData.append("contenu", contenu);
+  formData.append("utilisateurId", utilisateurId);
+
+  if (image) {
+    formData.append("image", image);
+  }
+
+  const response = await fetch(`${API_URL}/posts/createPost`, {
+    method: "POST",
+    body: formData,
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    console.error("Erreur backend :", data);
+    throw new Error(data.message || "Erreur lors de la création du post");
+  }
+
+  return data;
+};
+
+const getNumberOfPosts = async () => {
+  const response=await fetch(`${API_URL}/posts/postNumber`,{
+    method:"GET",
+    headers:{
+      "Content-Type":"application/json",  
+    },
+  });
+  const data = await response.json();
+  return data;
+};
+export { register, login,getNumberOfUsers, getNumberOfPosts,getAllPosts,createPost ,getUserNameById};

@@ -18,6 +18,10 @@ function LoginForm() {
       const response = await login(email, password);
 
       if (response.ok) {
+        const user = response.data?.utilisateur;
+        if (user) {
+          localStorage.setItem("user", JSON.stringify(user));
+        }
         navigate("/home");
       } else {
         console.log(response.data.message);

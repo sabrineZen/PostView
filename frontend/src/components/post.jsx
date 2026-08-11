@@ -1,22 +1,40 @@
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { HiHeart, HiChat, HiShare, HiDotsHorizontal } from "react-icons/hi";
+import { getUserNameById } from "../services/api";
+
 
 function Post({ post, isProfile = false, ispartager = false, iscommentaire = false }) {
   const [showComments, setShowComments] = useState(false);
+  const [userName, setUserName] = useState("John Doe");
 
   const safePost = post || {};
   const content = safePost.contenu || safePost.content || "Aucun contenu pour le moment.";
   const imageName = safePost.image || safePost.Image || null;
   const imageUrl = imageName
-    ? imageName.startsWith("http")
-      ? imageName
-      : `http://localhost:5000/uploads/${imageName}`
-    : null;
+  ? imageName.startsWith("http")
+  ? imageName
+  : `http://localhost:5000/uploads/${imageName}`
+  : null;
+  const userId = safePost.utilisateurId;
+  useEffect(() => {
+    const getAuthorName = async () => {
+        try {
 
+            if (userId) {
+                const data = await getUserNameById(userId);
+                setUserName(data.userName);
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    getAuthorName();
+}, [userId]);
   const authorName =
-    safePost.author?.nom || safePost.User?.nom || safePost.utilisateur?.nom || "John Doe";
+   userName|| "John Doe";
   const authorHandle =
-    safePost.author?.username || safePost.User?.username || safePost.utilisateur?.username || "@johndoe";
+   '@' + (userName || "@johndoe");
   const createdAt = safePost.createdAt
     ? new Date(safePost.createdAt).toLocaleString("fr-FR", {
         day: "2-digit",
@@ -29,7 +47,7 @@ function Post({ post, isProfile = false, ispartager = false, iscommentaire = fal
   const likes = safePost.likesCount ?? safePost.likes ?? 128;
   const comments = Array.isArray(safePost.commentaires) ? safePost.commentaires : [];
   const commentsCount = safePost.commentsCount ?? comments.length ?? 34;
-
+      
   return (
     <article className="w-full rounded-2xl border border-gray-800 bg-[#18181F] p-5 shadow-lg">
       {!isProfile && (

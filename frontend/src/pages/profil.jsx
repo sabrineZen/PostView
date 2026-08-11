@@ -118,5 +118,4 @@ function Profil() {
     </div>
   );
 }
-
 export default Profil;

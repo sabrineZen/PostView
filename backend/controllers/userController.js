@@ -20,5 +20,11 @@ const getUserNameById=async (req,res)=>{
     }
     return res.status(200).json({ userName: user.nom });
 }
+//recuperer tout les utilisateurs
 
-export { getNumberOfUsers, getUserNameById };;
+const getAllUsers=async (req,res)=>{
+    const{ id}=req.params;
+    const users=await Utilisateur.findAll();
+    return res.status(200).json({ users });
+}
+export { getNumberOfUsers, getUserNameById, getAllUsers };;

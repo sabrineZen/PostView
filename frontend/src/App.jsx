@@ -9,6 +9,7 @@ import Home from "./pages/home.jsx";
 import Profil from "./pages/profil.jsx";
 import Search from "./pages/search.jsx";
 import Notification from "./pages/notification.jsx";
+import EditProfil from "./pages/editProfil.jsx";
 
 function App() {
   return (
@@ -21,6 +22,8 @@ function App() {
         <Route path="/profil" element={<Profil />} />
         <Route path="/search" element={<Search />} />
         <Route path="/notification" element={<Notification />} />
+        <Route path="/editProfil" element={<EditProfil />} />
+
       </Routes>
     </BrowserRouter>
   );

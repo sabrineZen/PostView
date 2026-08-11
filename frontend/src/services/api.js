@@ -62,7 +62,13 @@ const getUserNameById = async (id) => {
   const data=await response.json();
   return data;
 } 
-    
+const getAllUsers = async () => {
+  const response = await fetch(`${API_URL}/users/all`, {
+    method: "GET",  
+  });
+  const data = await response.json();
+  return data;
+};
 //partie posts
 const getAllPosts=async()=>{
   const response=await fetch(`${API_URL}/posts/getAllPosts`,{
@@ -110,4 +116,4 @@ const getNumberOfPosts = async () => {
   const data = await response.json();
   return data;
 };
-export { register, login,getNumberOfUsers, getNumberOfPosts,getAllPosts,createPost ,getUserNameById};
+export { register, login,getNumberOfUsers, getNumberOfPosts,getAllPosts,createPost ,getUserNameById,getAllUsers};

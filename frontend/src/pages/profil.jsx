@@ -5,9 +5,11 @@ import Home from "./home";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {getUserNameById} from "../services/api"
+import EditProfile from "./editProfil";
 function Profil() {
   const navigate=useNavigate();
   const HomeNavigate=()=>navigate("/home")
+  const EditProfileNavigate=()=>navigate("/editProfil")
   const [userName, setUserName] = useState("");
   //recuperation du nom utilisateur
   const getuserName = async () => {
@@ -68,6 +70,7 @@ function Profil() {
                 {/* Bouton */}
                 <Button
                     className="h-11 w-48 rounded-full  border border-[#472E7C] font-semibold"
+                    onClick={()=>{navigate("/editProfil")}}
                     text="Modifier le profil"
                     color="hover:bg-[#312152]"
                 />
@@ -76,9 +79,9 @@ function Profil() {
 
             {/* Informations */}
             <div className="mt-16 ">
-                <h1 className="text-4xl font-bold flex self-start">sabrine</h1>
+                <h1 className="text-4xl font-bold flex self-start">{userName}</h1>
 
-                <p className="mt-1 text-violet-400 flex self-start">@sabrine</p>
+                <p className="mt-1 text-violet-400 flex self-start">@{userName}</p>
 
                 <p className="mt-5 text-gray-300 flex self-start">
                     Photographe & designer UI ✨ Paris : je capture la beauté du quotidien

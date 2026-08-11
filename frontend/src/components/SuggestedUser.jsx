@@ -1,5 +1,5 @@
 import posts from '../assets/posts.png'
-function SuggestedUser() {
+function SuggestedUser({user}) {
   return (
     <div className="flex items-center justify-between">
        
@@ -11,8 +11,8 @@ function SuggestedUser() {
         />
 
         <div>
-          <p className="font-semibold text-white">sabrine</p>
-          <p className="text-sm text-gray-400">@sabrine</p>
+          <p className="font-semibold text-white">{user.nom}</p>
+          <p className="text-sm text-gray-400">@{user.nom}</p>
         </div>
       </div>
 

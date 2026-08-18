@@ -1,4 +1,7 @@
-import Post from "../models/Post.js";
+import Post from "../models/post.js";
+import Commentaire from "../models/commentaire.js";
+import Like from "../models/like.js";
+import Utilisateur from "../models/utilisateur.js";
 
 const createPost = async (req, res) => {
     try {
@@ -21,28 +24,55 @@ const createPost = async (req, res) => {
         });
     }
 };
-//recuperer tout les posts
-const getAllPosts= async (req,res) =>{
-    try{
-        const Posts=await Post.findAll();
-        res.status(200).json({Posts});
-    }catch(error){
+
+const getAllPosts = async (req, res) => {
+    try {
+        const posts = await Post.findAll({
+            include: [
+                {
+                    association: "utilisateur",
+                    attributes: ["id", "nom"],
+                },
+                {
+                    association: "commentaires",
+                    include: [{ association: "utilisateur", attributes: ["id", "nom"] }],
+                },
+                {
+                    association: "likes",
+                },
+            ],
+            order: [["createdAt", "DESC"]],
+        });
+
+        const formattedPosts = posts.map((post) => {
+            const plainPost = post.toJSON();
+
+            return {
+                ...plainPost,
+                likesCount: Array.isArray(plainPost.likes) ? plainPost.likes.length : 0,
+                commentsCount: Array.isArray(plainPost.commentaires) ? plainPost.commentaires.length : 0,
+            };
+        });
+
+        res.status(200).json({ Posts: formattedPosts });
+    } catch (error) {
         return res.status(500).json({
             message: "Erreur serveur",
             error: error.message,
         });
     }
-}
-//compter le nombre de posts
- const PostNumber=async (req,res) => {
-    try{
-        const postCount=await Post.count();
-        res.status(200).json({postCount});
-    }catch(error){
-    return res.status(500).json({
-      message: "Erreur serveur",
-      error: error.message,
-    });
+};
+
+const PostNumber = async (req, res) => {
+    try {
+        const postCount = await Post.count();
+        res.status(200).json({ postCount });
+    } catch (error) {
+        return res.status(500).json({
+            message: "Erreur serveur",
+            error: error.message,
+        });
     }
-}
-export {PostNumber,createPost,getAllPosts};
+};
+
+export { PostNumber, createPost, getAllPosts };

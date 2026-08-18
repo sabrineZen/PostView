@@ -6,6 +6,7 @@ import "./models/index.js";
 import authRoute from "./routes/authRoute.js";
 import userRoute from "./routes/userRoute.js";
 import postRoute from "./routes/postRoute.js";
+import notificationRoute from "./routes/notificationRoute.js";
 
 dotenv.config();
 
@@ -16,6 +17,7 @@ app.use(cors());
 app.use("/api/auth", authRoute);
 app.use("/api/users", userRoute);
 app.use("/api/posts", postRoute);
+app.use("/api/notifications", notificationRoute);
 
 const port = process.env.PORT || 5000;
 

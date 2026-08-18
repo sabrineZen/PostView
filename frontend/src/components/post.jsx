@@ -1,40 +1,56 @@
-import { useState,useEffect } from "react";
+import { useState, useEffect } from "react";
 import { HiHeart, HiChat, HiShare, HiDotsHorizontal } from "react-icons/hi";
-import { getUserNameById } from "../services/api";
-
+import { getUserNameById, createComment, toggleLike } from "../services/api";
 
 function Post({ post, isProfile = false, ispartager = false, iscommentaire = false }) {
   const [showComments, setShowComments] = useState(false);
   const [userName, setUserName] = useState("John Doe");
+  const [commentInput, setCommentInput] = useState("");
+  const [comments, setComments] = useState(() =>
+    Array.isArray(post?.commentaires) ? post.commentaires : []
+  );
+  const [likes, setLikes] = useState(() => post?.likesCount ?? post?.likes ?? 0);
+  const [liked, setLiked] = useState(false);
 
   const safePost = post || {};
   const content = safePost.contenu || safePost.content || "Aucun contenu pour le moment.";
   const imageName = safePost.image || safePost.Image || null;
   const imageUrl = imageName
-  ? imageName.startsWith("http")
-  ? imageName
-  : `http://localhost:5000/uploads/${imageName}`
-  : null;
+    ? imageName.startsWith("http")
+      ? imageName
+      : `http://localhost:5000/uploads/${imageName}`
+    : null;
   const userId = safePost.utilisateurId;
+
   useEffect(() => {
     const getAuthorName = async () => {
-        try {
-
-            if (userId) {
-                const data = await getUserNameById(userId);
-                setUserName(data.userName);
-            }
-        } catch (error) {
-            console.error(error);
+      try {
+        if (userId) {
+          const data = await getUserNameById(userId);
+          setUserName(data.userName || "Utilisateur");
         }
+      } catch (error) {
+        console.error(error);
+      }
     };
 
     getAuthorName();
-}, [userId]);
-  const authorName =
-   userName|| "John Doe";
-  const authorHandle =
-   '@' + (userName || "@johndoe");
+  }, [userId]);
+
+  useEffect(() => {
+    const nextComments = Array.isArray(safePost.commentaires) ? safePost.commentaires : [];
+    const nextLikes = safePost.likesCount ?? safePost.likes ?? 0;
+
+    setComments((previousComments) => {
+      const sameComments = JSON.stringify(previousComments) === JSON.stringify(nextComments);
+      return sameComments ? previousComments : nextComments;
+    });
+
+    setLikes((previousLikes) => (previousLikes === nextLikes ? previousLikes : nextLikes));
+  }, [safePost.id, safePost.commentaires, safePost.likesCount, safePost.likes]);
+
+  const authorName = userName || "John Doe";
+  const authorHandle = "@" + (userName || "johndoe");
   const createdAt = safePost.createdAt
     ? new Date(safePost.createdAt).toLocaleString("fr-FR", {
         day: "2-digit",
@@ -44,10 +60,49 @@ function Post({ post, isProfile = false, ispartager = false, iscommentaire = fal
       })
     : "Il y a 2 h";
 
-  const likes = safePost.likesCount ?? safePost.likes ?? 128;
-  const comments = Array.isArray(safePost.commentaires) ? safePost.commentaires : [];
-  const commentsCount = safePost.commentsCount ?? comments.length ?? 34;
-      
+  const commentsCount = safePost.commentsCount ?? comments.length ?? 0;
+
+  const handleCommentSubmit = async () => {
+    if (!commentInput.trim()) return;
+
+    try {
+      const storedUser = JSON.parse(localStorage.getItem("user") || "null");
+      const utilisateurId = storedUser?.id;
+
+      if (!utilisateurId) {
+        alert("Connectez-vous pour commenter.");
+        return;
+      }
+
+      const payload = await createComment(safePost.id, utilisateurId, commentInput.trim());
+      const newComment = payload.commentaire;
+      setComments((prev) => [...prev, newComment]);
+      setCommentInput("");
+    } catch (error) {
+      console.error(error);
+      alert(error.message || "Impossible d'ajouter le commentaire.");
+    }
+  };
+
+  const handleLike = async () => {
+    try {
+      const storedUser = JSON.parse(localStorage.getItem("user") || "null");
+      const utilisateurId = storedUser?.id;
+
+      if (!utilisateurId) {
+        alert("Connectez-vous pour liker.");
+        return;
+      }
+
+      const payload = await toggleLike(safePost.id, utilisateurId);
+      setLiked(payload.liked);
+      setLikes(payload.likesCount);
+    } catch (error) {
+      console.error(error);
+      alert(error.message || "Impossible de mettre à jour le like.");
+    }
+  };
+
   return (
     <article className="w-full rounded-2xl border border-gray-800 bg-[#18181F] p-5 shadow-lg">
       {!isProfile && (
@@ -82,7 +137,10 @@ function Post({ post, isProfile = false, ispartager = false, iscommentaire = fal
       )}
 
       <div className="mt-5 flex items-center justify-between border-t border-[#2A2A33] pt-4">
-        <button className="flex items-center gap-2 text-gray-400 transition hover:text-red-500">
+        <button
+          onClick={handleLike}
+          className={`flex items-center gap-2 transition ${liked ? "text-red-500" : "text-gray-400 hover:text-red-500"}`}
+        >
           <HiHeart className="text-2xl" />
           <span>{likes}</span>
         </button>
@@ -106,11 +164,26 @@ function Post({ post, isProfile = false, ispartager = false, iscommentaire = fal
       {showComments && (
         <div className="mt-5 border-t border-[#2A2A33] pt-5">
           {!iscommentaire && (
-            <input
-              type="text"
-              placeholder="Écrire un commentaire..."
-              className="w-full rounded-xl bg-[#2A2A33] p-3 text-white outline-none placeholder:text-gray-500"
-            />
+            <div className="flex gap-2">
+              <input
+                type="text"
+                value={commentInput}
+                onChange={(event) => setCommentInput(event.target.value)}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter") {
+                    handleCommentSubmit();
+                  }
+                }}
+                placeholder="Écrire un commentaire..."
+                className="w-full rounded-xl bg-[#2A2A33] p-3 text-white outline-none placeholder:text-gray-500"
+              />
+              <button
+                onClick={handleCommentSubmit}
+                className="rounded-xl bg-violet-600 px-4 py-2 font-medium text-white hover:bg-violet-500"
+              >
+                Envoyer
+              </button>
+            </div>
           )}
 
           <div className="mt-6 space-y-5">
@@ -118,12 +191,12 @@ function Post({ post, isProfile = false, ispartager = false, iscommentaire = fal
               comments.map((comment, index) => (
                 <div key={comment.id || index} className="flex gap-3">
                   <div className="flex h-10 w-10 items-center justify-center rounded-full bg-violet-500 font-semibold text-white">
-                    {(comment.author?.nom || "U").charAt(0).toUpperCase()}
+                    {(comment.utilisateur?.nom || comment.author?.nom || "U").charAt(0).toUpperCase()}
                   </div>
 
                   <div>
                     <h4 className="font-semibold text-white">
-                      {comment.author?.nom || "Utilisateur"}
+                      {comment.utilisateur?.nom || comment.author?.nom || "Utilisateur"}
                     </h4>
                     <p className="text-gray-400">
                       {comment.contenu || comment.content || " commentaire"}

@@ -41,7 +41,7 @@ const login = async (email, password) => {
     data,
   };
 };
-//partie users
+
 const getNumberOfUsers = async () => {
   const response = await fetch(`${API_URL}/users/number`, {
     method: "GET",
@@ -52,35 +52,49 @@ const getNumberOfUsers = async () => {
   const data = await response.json();
   return data;
 };
+
 const getUserNameById = async (id) => {
-  const response= await fetch(`${API_URL}/users/name/${id}`,{
-    method:"GET",
-    headers:{
-      "content-type":"application/json",
+  const response = await fetch(`${API_URL}/users/name/${id}`, {
+    method: "GET",
+    headers: {
+      "content-type": "application/json",
     },
-  });
-  const data=await response.json();
-  return data;
-} 
-const getAllUsers = async () => {
-  const response = await fetch(`${API_URL}/users/all`, {
-    method: "GET",  
   });
   const data = await response.json();
   return data;
 };
-//partie posts
-const getAllPosts=async()=>{
-  const response=await fetch(`${API_URL}/posts/getAllPosts`,{
-    method:"GET",
-    headers:{
-      "content-type":"application/json",
+
+const getAllUsers = async () => {
+  const response = await fetch(`${API_URL}/users/all`, {
+    method: "GET",
+  });
+  const data = await response.json();
+  return data;
+};
+
+const getNotifications = async (utilisateurId) => {
+  const response = await fetch(`${API_URL}/notifications/${utilisateurId}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
     },
   });
-  const data=await response.json();
+
+  const data = await response.json();
   return data;
-} 
-    
+};
+
+const getAllPosts = async () => {
+  const response = await fetch(`${API_URL}/posts/getAllPosts`, {
+    method: "GET",
+    headers: {
+      "content-type": "application/json",
+    },
+  });
+  const data = await response.json();
+  return data;
+};
+
 const createPost = async (contenu, image, utilisateurId) => {
   const formData = new FormData();
 
@@ -107,13 +121,62 @@ const createPost = async (contenu, image, utilisateurId) => {
 };
 
 const getNumberOfPosts = async () => {
-  const response=await fetch(`${API_URL}/posts/postNumber`,{
-    method:"GET",
-    headers:{
-      "Content-Type":"application/json",  
+  const response = await fetch(`${API_URL}/posts/postNumber`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
     },
   });
   const data = await response.json();
   return data;
 };
-export { register, login,getNumberOfUsers, getNumberOfPosts,getAllPosts,createPost ,getUserNameById,getAllUsers};
+
+const createComment = async (postId, utilisateurId, contenu) => {
+  const response = await fetch(`${API_URL}/posts/${postId}/comments`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ postId, utilisateurId, contenu }),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || "Erreur lors de l'ajout du commentaire");
+  }
+
+  return data;
+};
+
+const toggleLike = async (postId, utilisateurId) => {
+  const response = await fetch(`${API_URL}/posts/${postId}/likes`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ utilisateurId }),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || "Erreur lors du like");
+  }
+
+  return data;
+};
+
+export {
+  register,
+  login,
+  getNumberOfUsers,
+  getNumberOfPosts,
+  getAllPosts,
+  createPost,
+  getUserNameById,
+  getAllUsers,
+  getNotifications,
+  createComment,
+  toggleLike,
+};

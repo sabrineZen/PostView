@@ -4,6 +4,7 @@ import Commentaire from "./commentaire.js";
 import Like from "./like.js";
 import ProfilVisite from "./profilVisite.js";   
 import Follow from "./follow.js";
+import Notification from "./notification.js";
 //relation entre post et utilisateur
 Post.belongsTo(Utilisateur,{foreignKey:'utilisateurId',as:'utilisateur'});
 Utilisateur.hasMany(Post,{foreignKey:'utilisateurId',as:'posts'});
@@ -19,6 +20,10 @@ Like.belongsTo(Utilisateur,{foreignKey:'utilisateurId',as:'utilisateur'});
 //relation entre like et post 
 Post.hasMany(Like,{foreignKey:'postId',as:'likes'});
 Like.belongsTo(Post,{foreignKey:'postId',as:'post'});
+//relation entre notification et utilisateur
+Utilisateur.hasMany(Notification,{ foreignKey:'utilisateurId', as:'notifications' });
+Notification.belongsTo(Utilisateur,{ foreignKey:'utilisateurId', as:'utilisateur' });
+Notification.belongsTo(Utilisateur,{ foreignKey:'emetteurId', as:'emetteur' });
 //relation entre profilVisite et utilisateur
 Utilisateur.hasMany(ProfilVisite,{foreignKey:'visiteurId',as:'visites'});
 ProfilVisite.belongsTo(Utilisateur,{foreignKey:'visiteurId',as:'visiteur'});
@@ -35,4 +40,4 @@ Utilisateur.hasMany(Follow,{foreignKey:'followingId',as:'followers'});
 Follow.belongsTo(Utilisateur,{foreignKey:'followingId',as:'following'});
 
 
-export{Utilisateur,Post,Commentaire,Like,ProfilVisite,Follow};
+export{Utilisateur,Post,Commentaire,Like,ProfilVisite,Follow,Notification};

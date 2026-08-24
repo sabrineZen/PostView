@@ -1,4 +1,5 @@
 import Utilisateur from "../models/Utilisateur.js";
+import { Op } from "sequelize";
 //nombre utilisateur
 const getNumberOfUsers = async (req, res) => {
     try{
@@ -27,4 +28,26 @@ const getAllUsers=async (req,res)=>{
     const users=await Utilisateur.findAll();
     return res.status(200).json({ users });
 }
-export { getNumberOfUsers, getUserNameById, getAllUsers };;
+//rechercher les users par lettre 
+const searchUsersByName = async (req, res) => {
+  try {
+    const { name } = req.query;
+
+    const users = await Utilisateur.findAll({
+      where: {
+        nom: {
+          [Op.iLike]: `%${name}%`
+        }
+      }
+    });
+
+    res.status(200).json(users);
+
+  } catch (error) {
+    res.status(500).json({
+      message: "Erreur serveur",
+      error: error.message
+    });
+  }
+};
+export { getNumberOfUsers, getUserNameById, getAllUsers, searchUsersByName };;

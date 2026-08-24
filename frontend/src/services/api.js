@@ -166,6 +166,19 @@ const toggleLike = async (postId, utilisateurId) => {
 
   return data;
 };
+const searchUsersByName = async (name) => {
+  const response = await fetch(`${API_URL}/users/search?name=${encodeURIComponent(name)}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  const data = await response.json();
+  if (!response.ok) {
+    throw new Error(data.message || "Erreur lors de la recherche d'utilisateurs");
+  }
+  return data;
+};
 
 export {
   register,
@@ -176,6 +189,7 @@ export {
   createPost,
   getUserNameById,
   getAllUsers,
+  searchUsersByName,
   getNotifications,
   createComment,
   toggleLike,

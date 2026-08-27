@@ -4,11 +4,11 @@ import LoginForm from "../components/loginForm";
 
 function Login() {
   return (
-    <div className="min-h-screen bg-[#0B0B0F] grid grid-cols-2">
+    <div className="grid min-h-screen grid-cols-1 bg-[#0B0B0F] lg:grid-cols-2">
 
       {/* Partie gauche */}
       <div
-        className="h-screen bg-cover bg-center flex flex-col justify-between p-16"
+        className="hidden h-screen flex-col justify-between bg-cover bg-center p-10 lg:flex xl:p-16"
         style={{ backgroundImage: `url(${image})` }}
       >
 
@@ -38,7 +38,7 @@ function Login() {
 
 
       {/* Partie droite */}
-      <div className="flex justify-center items-center">
+      <div className="flex min-h-screen items-center justify-center px-1 py-6 sm:px-4 sm:py-10 lg:px-8">
         <LoginForm/>
       </div>
         

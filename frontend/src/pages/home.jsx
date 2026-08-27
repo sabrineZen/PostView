@@ -24,17 +24,17 @@ function Home() {
   return (
     <div className="min-h-screen bg-[#0B0B0F] text-white">
 
-      <div className="mx-auto flex max-w-[1500px]">
+      <div className="mx-auto flex w-full max-w-[1500px] flex-col items-start lg:flex-row">
 
         {/* Navbar */}
-        <aside className="hidden lg:flex w-72 justify-center">
+        <aside className="w-full shrink-0 lg:w-64 xl:w-72">
           <HomeNavbar />
         </aside>
 
         {/* Feed */}
-        <main className="flex-1 flex justify-center px-6 py-8">
+        <main className="min-w-0 flex-1 px-3 py-5 sm:px-6 sm:py-8">
 
-          <div className="w-full max-w-[720px]">
+          <div className="mx-auto w-full max-w-[720px]">
 
             {/* Créer un post */}
             <CreatePost />
@@ -50,9 +50,9 @@ function Home() {
         </main>
 
         {/* Sidebar droite */}
-        <aside className="hidden xl:flex fixed top-8 right-8 w-80 mr-40">
-  <RightSideBar />
-</aside>
+        <aside className="hidden w-72 shrink-0 px-3 py-8 xl:flex 2xl:w-80">
+          <RightSideBar />
+        </aside>
       </div>
 
     </div>

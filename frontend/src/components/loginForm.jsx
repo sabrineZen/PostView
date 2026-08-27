@@ -32,7 +32,7 @@ function LoginForm() {
   };
 
   return (
-    <div className="w-full max-w-lg p-8">
+    <div className="w-full max-w-lg px-5 py-6 sm:p-8">
 
       <button
         className="flex items-center gap-2 cursor-pointer"
@@ -41,8 +41,8 @@ function LoginForm() {
         ← Retour
       </button>
 
-      <div className="mt-10 flex flex-col gap-4">
-        <p className="self-start text-4xl font-extrabold text-white">
+      <div className="mt-8 flex flex-col gap-3 sm:mt-10 sm:gap-4">
+        <p className="self-start text-3xl font-extrabold text-white sm:text-4xl">
           Bon retour
         </p>
 

@@ -13,10 +13,10 @@ function LandingNavbar() {
 
   return (
     <>
-      <nav className="w-full h-20 flex items-center justify-between px-6 md:px-10 relative z-50">
+      <nav className="relative z-50 flex h-20 w-full items-center justify-between px-4 sm:px-6 md:px-10">
 
         {/* Logo */}
-        <div className="flex items-center gap-2 ml-16">
+        <div className="ml-0 flex items-center gap-2 sm:ml-4 md:ml-16">
           <img
             src={logo}
             alt="PostView Logo"
@@ -47,7 +47,10 @@ function LandingNavbar() {
         {/* Hamburger Mobile */}
         <button
           className="md:hidden text-white text-3xl "
-          onClick={() => setIsOpen(!isOpen)}
+          type="button"
+          aria-label={isOpen ? "Fermer le menu" : "Ouvrir le menu"}
+          aria-expanded={isOpen}
+          onClick={() => setIsOpen((open) => !open)}
         >
           {isOpen ? <HiOutlineX /> : <HiOutlineMenu />}
         </button>
@@ -55,17 +58,23 @@ function LandingNavbar() {
 
       {/* Menu Mobile */}
       {isOpen && (
-        <div className="md:hidden bg-black px-6 py-6 flex flex-col gap-4">
+        <div className="relative z-50 flex flex-col gap-4 bg-[#0B0B0F] px-6 py-6 md:hidden">
           <Button className="rounded-xl"
             text="Connexion"
             color="bg-[#0B0B0F]"
-            onClick={() => {}}
+            onClick={() => {
+              setIsOpen(false);
+              loginNavigate();
+            }}
           />
 
           <Button className="rounded-xl"
             text="S'inscrire"
             color="bg-violet-500"
-            onClick={() => {}}
+            onClick={() => {
+              setIsOpen(false);
+              registerNavigate();
+            }}
           />
         </div>
       )}

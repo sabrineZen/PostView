@@ -22,7 +22,7 @@ function RegisterForm() {
     }
   };
   return (
-    <div className="w-full max-w-lg p-8  ">
+    <div className="w-full max-w-lg px-5 py-6 sm:p-8">
 
       <button 
         className="flex items-center gap-2 cursor-pointer"
@@ -31,8 +31,8 @@ function RegisterForm() {
         ← Retour
       </button>
 
-      <div className="flex flex-col gap-4 mt-10">
-        <p className="text-4xl font-extrabold text-white self-start">
+      <div className="mt-8 flex flex-col gap-3 sm:mt-10 sm:gap-4">
+        <p className="self-start text-3xl font-extrabold text-white sm:text-4xl">
           Rejoindre PostView
         </p>
 

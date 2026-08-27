@@ -1,7 +1,7 @@
 import express from "express";
 import upload from "../middleware/upload.js";
 import {getNumberOfUsers,getUserNameById,getAllUsers,searchUsersByName,updateUser} from "../controllers/userController.js";
-
+import protectedRoute from "../middleware/protectedRoute.js";
 const router=express.Router();
 router.get("/number",getNumberOfUsers);
 router.get("/name/:id",getUserNameById);

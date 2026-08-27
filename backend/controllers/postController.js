@@ -33,7 +33,7 @@ const getAllPosts = async (req, res) => {
             include: [
                 {
                     association: "utilisateur",
-                    attributes: ["id", "nom"],
+                    attributes: ["id", "nom", "photoProfil"],
                 },
                 {
                     association: "commentaires",

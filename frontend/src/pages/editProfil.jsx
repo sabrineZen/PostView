@@ -1,9 +1,50 @@
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import posts from "../assets/posts.png";
 import Button from "../components/ui/Button";
+import { updateUser } from "../services/api";
 
 function EditProfile() {
     const navigate = useNavigate();
+    const [user, setUser] = useState(null);
+    const [nom, setNom] = useState("");
+    const [bio, setBio] = useState("");
+    const [photoProfil, setPhotoProfil] = useState(null);
+    const [photoPreview, setPhotoPreview] = useState(posts);
+    const [saving, setSaving] = useState(false);
+    const [error, setError] = useState("");
+
+    useEffect(() => {
+        const storedUser = localStorage.getItem("user");
+        if (!storedUser) {
+            navigate("/login");
+            return;
+        }
+
+        const parsedUser = JSON.parse(storedUser);
+        setUser(parsedUser);
+        setNom(parsedUser.nom || "");
+        setBio(parsedUser.bio || "");
+        if (parsedUser.photoProfil) {
+            setPhotoPreview(`http://localhost:5000/uploads/${parsedUser.photoProfil}`);
+        }
+    }, [navigate]);
+
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+        setSaving(true);
+        setError("");
+
+        try {
+            const data = await updateUser(user.id, nom, bio, photoProfil);
+            localStorage.setItem("user", JSON.stringify(data.utilisateur));
+            navigate("/profil");
+        } catch (requestError) {
+            setError(requestError.message);
+        } finally {
+            setSaving(false);
+        }
+    };
 
     return (
         <div className="min-h-screen bg-[#0B0B0F] text-white flex justify-center py-10">
@@ -32,7 +73,7 @@ function EditProfile() {
                     </div>
 
                     {/* Contenu */}
-                    <div className="p-8 space-y-8">
+                    <form className="p-8 space-y-8" onSubmit={handleSubmit}>
 
                         {/* Photo */}
                         <div>
@@ -42,17 +83,32 @@ function EditProfile() {
 
                             <div className="flex items-center gap-5">
                                 <img
-                                    src={posts}
+                                    src={photoPreview}
                                     alt="Photo de profil"
                                     className="h-24 w-24 rounded-full object-cover border-4 border-violet-500/30"
                                 />
 
                                 <div>
                                     <button
+                                        type="button"
+                                        onClick={() => document.getElementById("profile-photo-input").click()}
                                         className="rounded-xl border border-[#4C2D8A] bg-[#36235E] px-4 py-2 text-sm font-medium hover:bg-[#4A2F80] transition"
                                     >
                                         Modifier la photo
                                     </button>
+                                    <input
+                                        id="profile-photo-input"
+                                        type="file"
+                                        accept="image/jpeg,image/png"
+                                        className="hidden"
+                                        onChange={(event) => {
+                                            const file = event.target.files?.[0];
+                                            if (file) {
+                                                setPhotoProfil(file);
+                                                setPhotoPreview(URL.createObjectURL(file));
+                                            }
+                                        }}
+                                    />
 
                                     <p className="text-xs text-gray-500 mt-2">
                                         JPG, PNG. 5 MB maximum.
@@ -69,7 +125,8 @@ function EditProfile() {
 
                             <input
                                 type="text"
-                                defaultValue="sabrine"
+                                value={nom}
+                                onChange={(event) => setNom(event.target.value)}
                                 className="w-full h-12 rounded-xl border border-gray-800 bg-[#0F0F14] px-4 text-white outline-none focus:border-violet-500 transition"
                             />
                         </div>
@@ -87,7 +144,8 @@ function EditProfile() {
 
                                 <input
                                     type="text"
-                                    defaultValue="sabrine"
+                                    value={nom}
+                                    onChange={(event) => setNom(event.target.value)}
                                     className="w-full h-12 rounded-r-xl border border-gray-800 bg-[#0F0F14] px-4 text-white outline-none focus:border-violet-500 transition"
                                 />
                             </div>
@@ -101,7 +159,8 @@ function EditProfile() {
 
                             <textarea
                                 rows="4"
-                                defaultValue="Photographe & designer UI ✨ Paris : je capture la beauté du quotidien"
+                                value={bio}
+                                onChange={(event) => setBio(event.target.value)}
                                 className="w-full rounded-xl border border-gray-800 bg-[#0F0F14] px-4 py-3 text-white outline-none resize-none focus:border-violet-500 transition"
                             />
                         </div>
@@ -110,6 +169,8 @@ function EditProfile() {
                         <div className="border-t border-gray-800" />
 
                         {/* Boutons */}
+                        {error && <p className="text-sm text-red-400">{error}</p>}
+
                         <div className="flex justify-end gap-3">
 
                             <button
@@ -123,11 +184,12 @@ function EditProfile() {
                                 text="Enregistrer"
                                 color="bg-[#36235E] hover:bg-[#4A2F80]"
                                 className="h-11 px-7 rounded-xl font-semibold"
+                                type="submit"
                             />
 
                         </div>
 
-                    </div>
+                    </form>
                 </div>
             </div>
         </div>

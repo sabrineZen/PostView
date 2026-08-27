@@ -8,6 +8,12 @@ import {
   getUserNameById,
   getAllPosts,
   getNumberOfVisitsProfil,
+  followUser,
+  unfollowUser,
+  getFollowers,
+  getNumberOfFollowers,
+  getNumberOfFollowing,
+  getFollowing
 } from "../services/api";
 
 function Profil() {
@@ -18,9 +24,35 @@ function Profil() {
   const [currentUserId, setCurrentUserId] = useState(null);
   const [posts, setPosts] = useState([]);
   const [bio, setBio] = useState("");
+  const [photoProfil, setPhotoProfil] = useState("");
   const [visits, setVisits] = useState(0);
+  const [isFollowing, setIsFollowing] = useState(false);
+  const [followLoading, setFollowLoading] = useState(false);
   const recordedVisit = useRef(null);
+  const [followersCount, setFollowersCount] = useState(0);
+  const [followingCount, setFollowingCount] = useState(0);
   const profileUserId = id || currentUserId;
+  useEffect(() => {
+    const fetchFollowCounts = async () => {
+      try {
+        if (!profileUserId) {
+          return;
+        }
+        const [followersData, followingData] = await Promise.all([
+          getNumberOfFollowers(profileUserId),
+          getNumberOfFollowing(profileUserId)
+        ]);
+        setFollowersCount(followersData.followersCount);
+        setFollowingCount(followingData.followingCount);
+      } catch (error) {
+        console.error("Erreur lors de la récupération des compteurs de suivi :", error);
+      }
+    };
+
+    fetchFollowCounts();
+  }, [profileUserId]);
+  
+
   useEffect(() => {
 
     const fetchVisits = async () => {
@@ -47,6 +79,44 @@ function Profil() {
     }
 
   }, [profileUserId, currentUserId]);
+
+  useEffect(() => {
+    const fetchFollowStatus = async () => {
+      if (!currentUserId || !profileUserId || currentUserId === Number(profileUserId)) {
+        return;
+      }
+
+      try {
+        const data = await getFollowers(profileUserId);
+        setIsFollowing(data.followers.some((follow) => Number(follow.followerId) === Number(currentUserId)));
+      } catch (error) {
+        console.error("Erreur lors de la récupération du suivi :", error);
+      }
+    };
+
+    fetchFollowStatus();
+  }, [profileUserId, currentUserId]);
+
+  const handleFollow = async () => {
+    if (!currentUserId || followLoading) return;
+
+    setFollowLoading(true);
+    try {
+      if (isFollowing) {
+        await unfollowUser(currentUserId, profileUserId);
+        setIsFollowing(false);
+        setFollowersCount((count) => Math.max(0, count - 1));
+      } else {
+        await followUser(currentUserId, profileUserId);
+        setIsFollowing(true);
+        setFollowersCount((count) => count + 1);
+      }
+    } catch (error) {
+      console.error("Erreur lors de la modification du suivi :", error);
+    } finally {
+      setFollowLoading(false);
+    }
+  };
 
   // Récupération de l'utilisateur connecté depuis le localStorage
   useEffect(() => {
@@ -76,6 +146,8 @@ function Profil() {
         const data = await getUserNameById(profileUserId);
 
         setUserName(data.userName || "Utilisateur");
+        setBio(data.bio || "");
+        setPhotoProfil(data.photoProfil || "");
       } catch (error) {
         console.error(
           "Erreur lors de la récupération du nom d'utilisateur :",
@@ -131,7 +203,7 @@ function Profil() {
 
             <div className="rounded-full border-4 border-violet-500/40 p-1">
               <img
-                src={profileImage}
+                src={photoProfil ? `http://localhost:5000/uploads/${photoProfil}` : profileImage}
                 alt="profil"
                 className="h-24 w-24 rounded-full object-cover"
               />
@@ -159,9 +231,9 @@ function Profil() {
             />
           ) : (
             <Button
-              className="h-11 w-32 rounded-full border border-[#472E7C] font-semibold"
-              onClick={() => console.log("Suivre :", profileUserId)}
-              text="Suivre"
+              className="h-13 w-32 rounded-full border border-[#472E7C] font-semibold"
+              onClick={handleFollow}
+              text={followLoading ? "..." : isFollowing ? "Ne plus suivre" : "Suivre"}
               color="hover:bg-[#312152]"
             />
           )}
@@ -180,14 +252,14 @@ function Profil() {
           </p>
 
           <p className="mt-5 text-gray-300">
-            Photographe & designer UI ✨ Paris : je capture la beauté du quotidien
+            {bio || "Aucune biographie pour le moment."}
           </p>
 
           <div className="mt-6 flex gap-8">
 
             <p>
               <span className="font-bold text-white">
-                12.4k
+                {followersCount}
               </span>{" "}
               <span className="text-gray-400">
                 abonnés
@@ -196,7 +268,7 @@ function Profil() {
 
             <p>
               <span className="font-bold text-white">
-                390
+                {followingCount}
               </span>{" "}
               <span className="text-gray-400">
                 abonnements

@@ -8,7 +8,10 @@ const createProfileVisit = async (req, res) => {
             return res.status(400).json({ message: "Les identifiants du visiteur et du profil sont requis" });
         }
 
-        await profilVisite.create({ visiteurId, profilVisiteId });
+        await profilVisite.findOrCreate({
+            where: { visiteurId, profilVisiteId },
+            defaults: { visiteurId, profilVisiteId },
+        });
         return res.status(201).json({ message: "Visite enregistrée" });
     } catch (error) {
         return res.status(500).json({
@@ -25,7 +28,9 @@ const getNumberOfVisitsProfil=async(req,res)=>{
         const visite=await profilVisite.count({
             where:{
                 profilVisiteId:utilisateurId
-            }
+            },
+            distinct: true,
+            col: "visiteurId",
         });
         return res.status(200).json({ visits: visite });
     } catch (error) {

@@ -8,18 +8,24 @@ import userRoute from "./routes/userRoute.js";
 import postRoute from "./routes/postRoute.js";
 import notificationRoute from "./routes/notificationRoute.js";
 import profilVisitRoute from "./routes/profilVisitRoute.js";
+import followRoute from "./routes/followRoute.js";
+import path from "path";
+import { fileURLToPath } from "url";
 
 dotenv.config();
 
 const app = express();
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 app.use(express.json());
 app.use(cors());
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use("/api/auth", authRoute);
 app.use("/api/users", userRoute);
 app.use("/api/posts", postRoute);
 app.use("/api/notifications", notificationRoute);
 app.use("/api/profilVisit", profilVisitRoute);
+app.use("/api", followRoute);
 
 const port = process.env.PORT || 5000;
 

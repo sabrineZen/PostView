@@ -64,6 +64,26 @@ const getUserNameById = async (id) => {
   return data;
 };
 
+const updateUser = async (id, nom, bio, photoProfil) => {
+  const formData = new FormData();
+  formData.append("nom", nom);
+  formData.append("bio", bio);
+  if (photoProfil) {
+    formData.append("photoProfil", photoProfil);
+  }
+
+  const response = await fetch(`${API_URL}/users/${id}`, {
+    method: "PUT",
+    body: formData,
+  });
+
+  const data = await response.json();
+  if (!response.ok) {
+    throw new Error(data.message || "Erreur lors de la mise à jour du profil");
+  }
+  return data;
+};
+
 const getAllUsers = async () => {
   const response = await fetch(`${API_URL}/users/all`, {
     method: "GET",
@@ -211,6 +231,87 @@ const getNumberOfVisitsProfil = async ( profilVisiteId) => {
   }
   return data;
 };
+//partie follow
+ const followUser=async(followerId,followingId)=>{
+  const response=await fetch(`${API_URL}/follow`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ followerId, followingId }),
+  });
+  const data = await response.json();
+  if (!response.ok) {
+    throw new Error(data.message || "Erreur lors du suivi de l'utilisateur");
+  }
+  return data;
+};
+const unfollowUser=async(followerId,followingId)=>{
+  const response=await fetch(`${API_URL}/unfollow`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ followerId, followingId }),
+  });
+  const data = await response.json();
+  if (!response.ok) {
+    throw new Error(data.message || "Erreur lors du non-suivi de l'utilisateur");
+  }
+  return data;
+};
+ const getFollowers=async(userId)=>{
+  const response=await fetch(`${API_URL}/followers/${userId}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  const data = await response.json();
+  if (!response.ok) {
+    throw new Error(data.message || "Erreur lors de la récupération des followers");
+  }
+  return data;
+};
+ const getFollowing=async(userId)=>{
+  const response=await fetch(`${API_URL}/following/${userId}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  const data = await response.json();
+  if (!response.ok) {
+    throw new Error(data.message || "Erreur lors de la récupération des utilisateurs suivis");
+  }
+  return data;
+};
+const getNumberOfFollowers=async(userId)=>{
+  const response=await fetch(`${API_URL}/followers/count/${userId}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  const data = await response.json();
+  if (!response.ok) {
+    throw new Error(data.message || "Erreur lors de la récupération du nombre de followers");
+  }
+  return data;
+};
+const getNumberOfFollowing=async(userId)=>{
+  const response=await fetch(`${API_URL}/following/count/${userId}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  const data = await response.json();
+  if (!response.ok) {
+    throw new Error(data.message || "Erreur lors de la récupération du nombre d'utilisateurs suivis");
+  }
+  return data;
+};
 export {
   register,
   login,
@@ -219,6 +320,7 @@ export {
   getAllPosts,
   createPost,
   getUserNameById,
+  updateUser,
   getAllUsers,
   searchUsersByName,
   createProfileVisit,
@@ -226,4 +328,10 @@ export {
   getNotifications,
   createComment,
   toggleLike,
+  followUser,
+  unfollowUser,
+  getFollowers,
+  getFollowing
+  ,getNumberOfFollowers,
+  getNumberOfFollowing
 };

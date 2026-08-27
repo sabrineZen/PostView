@@ -7,6 +7,7 @@ function Post({ post, isProfile = false, ispartager = false, iscommentaire = fal
   const navigate = useNavigate();
   const [showComments, setShowComments] = useState(false);
   const [userName, setUserName] = useState("John Doe");
+  const [authorPhoto, setAuthorPhoto] = useState("");
   const [commentInput, setCommentInput] = useState("");
   const [comments, setComments] = useState(() =>
     Array.isArray(post?.commentaires) ? post.commentaires : []
@@ -23,6 +24,13 @@ function Post({ post, isProfile = false, ispartager = false, iscommentaire = fal
       : `http://localhost:5000/uploads/${imageName}`
     : null;
   const userId = safePost.utilisateurId;
+  const postAuthorPhoto = safePost.utilisateur?.photoProfil;
+
+  useEffect(() => {
+    if (postAuthorPhoto) {
+      setAuthorPhoto(postAuthorPhoto);
+    }
+  }, [postAuthorPhoto]);
 
   useEffect(() => {
     const getAuthorName = async () => {
@@ -30,6 +38,7 @@ function Post({ post, isProfile = false, ispartager = false, iscommentaire = fal
         if (userId) {
           const data = await getUserNameById(userId);
           setUserName(data.userName || "Utilisateur");
+              setAuthorPhoto((currentPhoto) => currentPhoto || data.photoProfil || "");
         }
       } catch (error) {
         console.error(error);
@@ -110,9 +119,17 @@ function Post({ post, isProfile = false, ispartager = false, iscommentaire = fal
       {!isProfile && (
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-3">
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-violet-500 font-semibold text-white">
-              {authorName.charAt(0).toUpperCase()}
-            </div>
+            {authorPhoto ? (
+              <img
+                src={`http://localhost:5000/uploads/${authorPhoto}`}
+                alt={`Photo de ${authorName}`}
+                className="h-12 w-12 rounded-full object-cover"
+              />
+            ) : (
+              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-violet-500 font-semibold text-white">
+                {authorName.charAt(0).toUpperCase()}
+              </div>
+            )}
 
             <div>
               <h3 

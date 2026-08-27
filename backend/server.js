@@ -7,6 +7,7 @@ import authRoute from "./routes/authRoute.js";
 import userRoute from "./routes/userRoute.js";
 import postRoute from "./routes/postRoute.js";
 import notificationRoute from "./routes/notificationRoute.js";
+import profilVisitRoute from "./routes/profilVisitRoute.js";
 
 dotenv.config();
 
@@ -18,6 +19,7 @@ app.use("/api/auth", authRoute);
 app.use("/api/users", userRoute);
 app.use("/api/posts", postRoute);
 app.use("/api/notifications", notificationRoute);
+app.use("/api/profilVisit", profilVisitRoute);
 
 const port = process.env.PORT || 5000;
 

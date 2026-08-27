@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react";
 import { HiHeart, HiChat, HiShare, HiDotsHorizontal } from "react-icons/hi";
 import { getUserNameById, createComment, toggleLike } from "../services/api";
+import { useNavigate } from "react-router-dom";
 
 function Post({ post, isProfile = false, ispartager = false, iscommentaire = false }) {
+  const navigate = useNavigate();
   const [showComments, setShowComments] = useState(false);
   const [userName, setUserName] = useState("John Doe");
   const [commentInput, setCommentInput] = useState("");
@@ -113,7 +115,9 @@ function Post({ post, isProfile = false, ispartager = false, iscommentaire = fal
             </div>
 
             <div>
-              <h3 className="flex self-start font-semibold text-white">{authorName}</h3>
+              <h3 
+              onClick={() => navigate("/profil/" + userId)}  
+              className="flex self-start font-semibold text-white cursor-pointer">{authorName} </h3>
               <p className="text-sm text-gray-400">
                 {authorHandle} • {createdAt}
               </p>

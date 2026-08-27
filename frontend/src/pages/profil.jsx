@@ -1,9 +1,14 @@
 import Post from "../components/post";
 import profileImage from "../assets/posts.png";
 import Button from "../components/ui/Button";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { getUserNameById, getAllPosts } from "../services/api";
+import {
+  createProfileVisit,
+  getUserNameById,
+  getAllPosts,
+  getNumberOfVisitsProfil,
+} from "../services/api";
 
 function Profil() {
   const navigate = useNavigate();
@@ -13,9 +18,35 @@ function Profil() {
   const [currentUserId, setCurrentUserId] = useState(null);
   const [posts, setPosts] = useState([]);
   const [bio, setBio] = useState("");
-  
-
+  const [visits, setVisits] = useState(0);
+  const recordedVisit = useRef(null);
   const profileUserId = id || currentUserId;
+  useEffect(() => {
+
+    const fetchVisits = async () => {
+        try {
+            const visitKey = `${currentUserId}:${profileUserId}`;
+            if (currentUserId && currentUserId !== Number(profileUserId) && recordedVisit.current !== visitKey) {
+              await createProfileVisit(currentUserId, profileUserId);
+              recordedVisit.current = visitKey;
+            }
+
+            const data = await getNumberOfVisitsProfil(profileUserId);
+            setVisits(data.visits);
+            console.log("Nombre de visites du profil :", data.visits);
+
+        } catch (error) {
+            console.error(
+                "Erreur lors de la récupération du nombre de visites :",
+                error
+            );
+        }
+    };
+    if (profileUserId && currentUserId) {
+      fetchVisits();
+    }
+
+  }, [profileUserId, currentUserId]);
 
   // Récupération de l'utilisateur connecté depuis le localStorage
   useEffect(() => {
@@ -182,14 +213,14 @@ function Profil() {
             </p>
 
             {/*afficher les vu */}
-            <p className="mt-4 flex items-center gap-2 text-sm text-gray-400">
+          {currentUserId === Number(profileUserId) && (  <p className="mt-4 flex items-center gap-2 text-sm text-gray-400">
               <span className="font-semibold text-white">
-                2 354
+                {visits}
               </span>
               vues du profil ce mois
             </p>
 
-          </div>
+            )}  </div>
         </div>
 
         {/* Liste des posts */}

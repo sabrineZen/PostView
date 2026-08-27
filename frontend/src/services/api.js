@@ -180,7 +180,37 @@ const searchUsersByName = async (name) => {
   }
   return data;
 };
+const createProfileVisit = async (visiteurId, profilVisiteId) => {
+  const response = await fetch(`${API_URL}/profilVisit`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ visiteurId, profilVisiteId }),
+  });
 
+  const data = await response.json();
+  if (!response.ok) {
+    throw new Error(data.message || "Erreur lors de l'enregistrement de la visite");
+  }
+  return data;
+};
+
+// recuperer le nombre de visites pour un profil spécifique
+const getNumberOfVisitsProfil = async ( profilVisiteId) => {
+  const response = await fetch(`${API_URL}/profilVisit/${profilVisiteId}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    
+  });
+  const data = await response.json();
+  if (!response.ok) {
+    throw new Error(data.message || "Erreur lors de la recherche de visites");
+  }
+  return data;
+};
 export {
   register,
   login,
@@ -191,6 +221,8 @@ export {
   getUserNameById,
   getAllUsers,
   searchUsersByName,
+  createProfileVisit,
+  getNumberOfVisitsProfil,
   getNotifications,
   createComment,
   toggleLike,

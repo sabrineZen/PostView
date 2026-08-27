@@ -20,6 +20,7 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/home" element={<Home />} />
         <Route path="/profil" element={<Profil />} />
+        <Route path="/profil/:id" element={<Profil />} />
         <Route path="/search" element={<Search />} />
         <Route path="/notification" element={<Notification />} />
         <Route path="/editProfil" element={<EditProfil />} />

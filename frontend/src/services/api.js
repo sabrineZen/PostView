@@ -84,8 +84,9 @@ const getNotifications = async (utilisateurId) => {
   return data;
 };
 
-const getAllPosts = async () => {
-  const response = await fetch(`${API_URL}/posts/getAllPosts`, {
+const getAllPosts = async (utilisateurId) => {
+  const query = utilisateurId ? `?utilisateurId=${utilisateurId}` : "";
+  const response = await fetch(`${API_URL}/posts/getAllPosts${query}`, {
     method: "GET",
     headers: {
       "content-type": "application/json",

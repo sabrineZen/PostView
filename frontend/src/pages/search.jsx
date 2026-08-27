@@ -80,7 +80,7 @@ function Search() {
           {searchResults.map((user) => (
             <div
               key={user.id}
-               onClick={() => navigate(`/profil`)}
+              onClick={() => navigate(`/profil/${user.id}`)}
               className="mb-3 rounded-xl bg-[#18181F] p-4 flex flex-col items-center mt-4"
             >
               {/* Photo de profil */}

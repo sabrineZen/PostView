@@ -27,7 +27,9 @@ const createPost = async (req, res) => {
 
 const getAllPosts = async (req, res) => {
     try {
+        const { utilisateurId } = req.query;
         const posts = await Post.findAll({
+            where: utilisateurId ? { utilisateurId: Number(utilisateurId) } : undefined,
             include: [
                 {
                     association: "utilisateur",

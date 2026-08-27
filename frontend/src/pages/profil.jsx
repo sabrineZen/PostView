@@ -1,9 +1,9 @@
 import Post from "../components/post";
-import posts from "../assets/posts.png";
+import profileImage from "../assets/posts.png";
 import Button from "../components/ui/Button";
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { getUserNameById } from "../services/api";
+import { getUserNameById, getAllPosts } from "../services/api";
 
 function Profil() {
   const navigate = useNavigate();
@@ -11,6 +11,11 @@ function Profil() {
 
   const [userName, setUserName] = useState("");
   const [currentUserId, setCurrentUserId] = useState(null);
+  const [posts, setPosts] = useState([]);
+  const [bio, setBio] = useState("");
+  
+
+  const profileUserId = id || currentUserId;
 
   // Récupération de l'utilisateur connecté depuis le localStorage
   useEffect(() => {
@@ -29,16 +34,17 @@ function Profil() {
     }
   }, []);
 
-  // recuperation du nom utilisateur
+  // récupération du nom utilisateur
   useEffect(() => {
     const getuserName = async () => {
       try {
-        if (!id) {
+        if (!profileUserId) {
           return;
         }
 
-        const data = await getUserNameById(id);
-        setUserName(data.userName);
+        const data = await getUserNameById(profileUserId);
+
+        setUserName(data.userName || "Utilisateur");
       } catch (error) {
         console.error(
           "Erreur lors de la récupération du nom d'utilisateur :",
@@ -48,9 +54,31 @@ function Profil() {
     };
 
     getuserName();
-  }, [id]);
+  }, [profileUserId]);
 
-  const isMyProfile = currentUserId === Number(id);
+  // récupération des posts
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        if (!profileUserId) {
+          return;
+        }
+
+        const data = await getAllPosts(profileUserId);
+        setPosts(data.Posts || []);
+      } catch (error) {
+        console.error(
+          "Erreur lors de la récupération des posts :",
+          error
+        );
+      }
+    };
+
+    fetchPosts();
+  }, [profileUserId]);
+
+  const isMyProfile =
+    currentUserId === Number(profileUserId);
 
   return (
     <div className="min-h-screen bg-[#0B0B0F] text-white flex justify-center py-10">
@@ -69,9 +97,10 @@ function Profil() {
 
           {/* Partie gauche */}
           <div className="flex items-center gap-6">
+
             <div className="rounded-full border-4 border-violet-500/40 p-1">
               <img
-                src={posts}
+                src={profileImage}
                 alt="profil"
                 className="h-24 w-24 rounded-full object-cover"
               />
@@ -86,6 +115,7 @@ function Profil() {
                 @{userName}
               </p>
             </div>
+
           </div>
 
           {/* Bouton */}
@@ -99,15 +129,17 @@ function Profil() {
           ) : (
             <Button
               className="h-11 w-32 rounded-full border border-[#472E7C] font-semibold"
-              onClick={() => console.log("Suivre :", id)}
+              onClick={() => console.log("Suivre :", profileUserId)}
               text="Suivre"
               color="hover:bg-[#312152]"
             />
           )}
+
         </div>
 
         {/* Informations */}
         <div className="mt-16">
+
           <h1 className="text-4xl font-bold">
             {userName}
           </h1>
@@ -121,34 +153,64 @@ function Profil() {
           </p>
 
           <div className="mt-6 flex gap-8">
+
             <p>
-              <span className="font-bold text-white">12.4k</span>{" "}
-              <span className="text-gray-400">abonnés</span>
+              <span className="font-bold text-white">
+                12.4k
+              </span>{" "}
+              <span className="text-gray-400">
+                abonnés
+              </span>
             </p>
 
             <p>
-              <span className="font-bold text-white">390</span>{" "}
-              <span className="text-gray-400">abonnements</span>
+              <span className="font-bold text-white">
+                390
+              </span>{" "}
+              <span className="text-gray-400">
+                abonnements
+              </span>
             </p>
 
             <p>
-              <span className="font-bold text-white">247</span>{" "}
-              <span className="text-gray-400">posts</span>
+              <span className="font-bold text-white">
+                {posts.length}
+              </span>{" "}
+              <span className="text-gray-400">
+                posts
+              </span>
             </p>
 
             {/*afficher les vu */}
             <p className="mt-4 flex items-center gap-2 text-sm text-gray-400">
-              <span className="font-semibold text-white">2 354</span>
+              <span className="font-semibold text-white">
+                2 354
+              </span>
               vues du profil ce mois
             </p>
+
           </div>
         </div>
 
         {/* Liste des posts */}
-        <div className="mt-8 space-y-6">
-          <Post isProfile ispartager iscommentaire />
-          <Post isProfile ispartager iscommentaire />
-          <Post isProfile ispartager iscommentaire />
+        <div className="mt-8 flex flex-col gap-6">
+
+          {posts.length > 0 ? (
+            posts.map((post) => (
+              <Post
+                key={post.id}
+                post={post}
+                isProfile
+                ispartager
+                iscommentaire
+              />
+            ))
+          ) : (
+            <p className="text-center text-gray-500">
+              Aucun post pour le moment.
+            </p>
+          )}
+
         </div>
 
       </div>

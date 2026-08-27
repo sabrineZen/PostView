@@ -1,5 +1,4 @@
 import express from "express";
-import protectedRoute from "../middleware/protectedRoute.js";
 import {
 	followUser,
 	unfollowUser,

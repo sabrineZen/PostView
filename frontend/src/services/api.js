@@ -93,10 +93,12 @@ const getAllUsers = async () => {
 };
 
 const getNotifications = async (utilisateurId) => {
+  const user = JSON.parse(localStorage.getItem("user") || "null");
   const response = await fetch(`${API_URL}/notifications/${utilisateurId}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
+      Authorization: `Bearer ${user?.token || ""}`,
     },
   });
 

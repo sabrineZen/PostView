@@ -1,5 +1,5 @@
 import Notification from "../models/notification.js";
-import Utilisateur from "../models/utilisateur.js";
+import Utilisateur from "../models/Utilisateur.js";
 
 const getNotificationsByUser = async (req, res) => {
   try {

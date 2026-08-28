@@ -1,5 +1,6 @@
 import Utilisateur from "../models/Utilisateur.js";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
 
 // partie inscription
@@ -110,8 +111,15 @@ const Login = async (req, res) => {
     }
 
     // Connexion réussie
+    const token = jwt.sign(
+      { id: utilisateur.id, email: utilisateur.email },
+      process.env.JWT_SECRET || "postview-secret",
+      { expiresIn: "7d" }
+    );
+
     return res.status(200).json({
       message: "Connexion réussie",
+      token,
       utilisateur: {
         id: utilisateur.id,
         nom: utilisateur.nom,

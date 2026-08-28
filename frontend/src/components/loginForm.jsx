@@ -20,7 +20,10 @@ function LoginForm() {
       if (response.ok) {
         const user = response.data?.utilisateur;
         if (user) {
-          localStorage.setItem("user", JSON.stringify(user));
+          localStorage.setItem(
+            "user",
+            JSON.stringify({ ...user, token: response.data.token })
+          );
         }
         navigate("/home");
       } else {

@@ -1,7 +1,4 @@
 import Post from "../models/post.js";
-import Commentaire from "../models/commentaire.js";
-import Like from "../models/like.js";
-import Utilisateur from "../models/utilisateur.js";
 
 const createPost = async (req, res) => {
     try {

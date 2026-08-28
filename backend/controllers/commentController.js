@@ -1,7 +1,7 @@
 import Commentaire from "../models/commentaire.js";
 import Post from "../models/post.js";
-import Utilisateur from "../models/utilisateur.js";
 import Notification from "../models/notification.js";
+import Utilisateur from "../models/utilisateur.js";
 
 const createComment = async (req, res) => {
   try {

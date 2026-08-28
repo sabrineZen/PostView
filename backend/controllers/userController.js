@@ -1,4 +1,4 @@
-import Utilisateur from "../models/Utilisateur.js";
+import Utilisateur from "../models/utilisateur.js";
 import { Op } from "sequelize";
 //nombre utilisateur
 const getNumberOfUsers = async (req, res) => {

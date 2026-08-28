@@ -1,8 +1,7 @@
 import Like from "../models/like.js";
 import Post from "../models/post.js";
-import Utilisateur from "../models/utilisateur.js";
 import Notification from "../models/notification.js";
-
+import Utilisateur from "../models/utilisateur.js";
 const toggleLike = async (req, res) => {
   try {
     const { postId } = req.params;

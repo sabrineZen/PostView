@@ -53,7 +53,7 @@ function HomeNavbar() {
         </nav>
       )}
 
-      <nav className="sticky top-0 hidden h-screen w-full flex-col justify-between p-5 text-white lg:flex xl:p-8">
+      <nav className="hidden w-full flex-col justify-between p-5 text-white lg:flex xl:p-8">
 
       {/* Haut */}
       <div className="flex w-full flex-col gap-12">

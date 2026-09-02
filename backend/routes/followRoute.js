@@ -6,7 +6,7 @@ import {
 	getFollowing,
 	getNumberOfFollowers,
 	getNumberOfFollowing,
-} from "../controllers/followController.js";
+}from "../controllers/FollowController.js";
 const router=express.Router();
 
 router.post("/follow", followUser);

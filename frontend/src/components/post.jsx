@@ -9,6 +9,8 @@ function Post({ post, isProfile = false, ispartager = false, iscommentaire = fal
   const [userName, setUserName] = useState("John Doe");
   const [authorPhoto, setAuthorPhoto] = useState("");
   const [commentInput, setCommentInput] = useState("");
+  const [options, setOptions] = useState(false);
+  const [notInterested, setNotInterested] = useState(false);
   const [comments, setComments] = useState(() =>
     Array.isArray(post?.commentaires) ? post.commentaires : []
   );
@@ -16,13 +18,20 @@ function Post({ post, isProfile = false, ispartager = false, iscommentaire = fal
   const [liked, setLiked] = useState(false);
 
   const safePost = post || {};
-  const content = safePost.contenu || safePost.content || "Aucun contenu pour le moment.";
+
+  const content =
+    safePost.contenu ||
+    safePost.content ||
+    "Aucun contenu pour le moment.";
+
   const imageName = safePost.image || safePost.Image || null;
+
   const imageUrl = imageName
     ? imageName.startsWith("http")
       ? imageName
       : `http://localhost:5000/uploads/${imageName}`
     : null;
+
   const userId = safePost.utilisateurId;
   const postAuthorPhoto = safePost.utilisateur?.photoProfil;
 
@@ -38,7 +47,9 @@ function Post({ post, isProfile = false, ispartager = false, iscommentaire = fal
         if (userId) {
           const data = await getUserNameById(userId);
           setUserName(data.userName || "Utilisateur");
-              setAuthorPhoto((currentPhoto) => currentPhoto || data.photoProfil || "");
+          setAuthorPhoto(
+            (currentPhoto) => currentPhoto || data.photoProfil || ""
+          );
         }
       } catch (error) {
         console.error(error);
@@ -49,19 +60,32 @@ function Post({ post, isProfile = false, ispartager = false, iscommentaire = fal
   }, [userId]);
 
   useEffect(() => {
-    const nextComments = Array.isArray(safePost.commentaires) ? safePost.commentaires : [];
+    const nextComments = Array.isArray(safePost.commentaires)
+      ? safePost.commentaires
+      : [];
+
     const nextLikes = safePost.likesCount ?? safePost.likes ?? 0;
 
     setComments((previousComments) => {
-      const sameComments = JSON.stringify(previousComments) === JSON.stringify(nextComments);
+      const sameComments =
+        JSON.stringify(previousComments) === JSON.stringify(nextComments);
+
       return sameComments ? previousComments : nextComments;
     });
 
-    setLikes((previousLikes) => (previousLikes === nextLikes ? previousLikes : nextLikes));
-  }, [safePost.id, safePost.commentaires, safePost.likesCount, safePost.likes]);
+    setLikes((previousLikes) =>
+      previousLikes === nextLikes ? previousLikes : nextLikes
+    );
+  }, [
+    safePost.id,
+    safePost.commentaires,
+    safePost.likesCount,
+    safePost.likes,
+  ]);
 
   const authorName = userName || "John Doe";
   const authorHandle = "@" + (userName || "johndoe");
+
   const createdAt = safePost.createdAt
     ? new Date(safePost.createdAt).toLocaleString("fr-FR", {
         day: "2-digit",
@@ -85,8 +109,14 @@ function Post({ post, isProfile = false, ispartager = false, iscommentaire = fal
         return;
       }
 
-      const payload = await createComment(safePost.id, utilisateurId, commentInput.trim());
+      const payload = await createComment(
+        safePost.id,
+        utilisateurId,
+        commentInput.trim()
+      );
+
       const newComment = payload.commentaire;
+
       setComments((prev) => [...prev, newComment]);
       setCommentInput("");
     } catch (error) {
@@ -106,6 +136,7 @@ function Post({ post, isProfile = false, ispartager = false, iscommentaire = fal
       }
 
       const payload = await toggleLike(safePost.id, utilisateurId);
+
       setLiked(payload.liked);
       setLikes(payload.likesCount);
     } catch (error) {
@@ -113,6 +144,15 @@ function Post({ post, isProfile = false, ispartager = false, iscommentaire = fal
       alert(error.message || "Impossible de mettre à jour le like.");
     }
   };
+
+  const handleNotInterested = () => {
+    setNotInterested(true);
+    setOptions(false);
+  };
+
+  if (notInterested) {
+    return null;
+  }
 
   return (
     <article className="w-full rounded-2xl border border-gray-800 bg-[#18181F] p-5 shadow-lg">
@@ -132,18 +172,39 @@ function Post({ post, isProfile = false, ispartager = false, iscommentaire = fal
             )}
 
             <div>
-              <h3 
-              onClick={() => navigate("/profil/" + userId)}  
-              className="flex self-start font-semibold text-white cursor-pointer">{authorName} </h3>
+              <h3
+                onClick={() => navigate("/profil/" + userId)}
+                className="flex cursor-pointer self-start font-semibold text-white"
+              >
+                {authorName}
+              </h3>
+
               <p className="text-sm text-gray-400">
                 {authorHandle} • {createdAt}
               </p>
             </div>
           </div>
 
-          <button className="text-gray-400 transition hover:text-white" aria-label="Options du post">
-            <HiDotsHorizontal className="text-2xl" />
-          </button>
+          <div className="relative">
+            <button
+              onClick={() => setOptions(!options)}
+              className="text-gray-400 transition hover:text-white"
+              aria-label="Options du post"
+            >
+              <HiDotsHorizontal className="text-2xl" />
+            </button>
+
+            {options && (
+              <div className="absolute right-0 top-8 z-10 w-32 overflow-hidden rounded-lg bg-[#2A2A33] shadow-lg">
+                <button
+                  onClick={handleNotInterested}
+                  className="w-full cursor-pointer px-3 py-2 text-left text-gray-200 hover:bg-violet-900"
+                >
+                  Pas intéressé
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       )}
 
@@ -153,14 +214,22 @@ function Post({ post, isProfile = false, ispartager = false, iscommentaire = fal
 
       {imageUrl && (
         <div className="mt-5 flex h-80 items-center justify-center overflow-hidden rounded-xl bg-[#2A2A33]">
-          <img src={imageUrl} alt="Image du post" className="h-full w-full object-cover" />
+          <img
+            src={imageUrl}
+            alt="Image du post"
+            className="h-full w-full object-cover"
+          />
         </div>
       )}
 
       <div className="mt-5 flex items-center justify-between border-t border-[#2A2A33] pt-4">
         <button
           onClick={handleLike}
-          className={`flex items-center gap-2 transition ${liked ? "text-red-500" : "text-gray-400 hover:text-red-500"}`}
+          className={`flex items-center gap-2 transition ${
+            liked
+              ? "text-red-500"
+              : "text-gray-400 hover:text-red-500"
+          }`}
         >
           <HiHeart className="text-2xl" />
           <span>{likes}</span>
@@ -198,6 +267,7 @@ function Post({ post, isProfile = false, ispartager = false, iscommentaire = fal
                 placeholder="Écrire un commentaire..."
                 className="w-full rounded-xl bg-[#2A2A33] p-3 text-white outline-none placeholder:text-gray-500"
               />
+
               <button
                 onClick={handleCommentSubmit}
                 className="rounded-xl bg-violet-600 px-4 py-2 font-medium text-white hover:bg-violet-500"
@@ -212,21 +282,34 @@ function Post({ post, isProfile = false, ispartager = false, iscommentaire = fal
               comments.map((comment, index) => (
                 <div key={comment.id || index} className="flex gap-3">
                   <div className="flex h-10 w-10 items-center justify-center rounded-full bg-violet-500 font-semibold text-white">
-                    {(comment.utilisateur?.nom || comment.author?.nom || "U").charAt(0).toUpperCase()}
+                    {(
+                      comment.utilisateur?.nom ||
+                      comment.author?.nom ||
+                      "U"
+                    )
+                      .charAt(0)
+                      .toUpperCase()}
                   </div>
 
                   <div>
                     <h4 className="font-semibold text-white">
-                      {comment.utilisateur?.nom || comment.author?.nom || "Utilisateur"}
+                      {comment.utilisateur?.nom ||
+                        comment.author?.nom ||
+                        "Utilisateur"}
                     </h4>
+
                     <p className="text-gray-400">
-                      {comment.contenu || comment.content || " commentaire"}
+                      {comment.contenu ||
+                        comment.content ||
+                        " commentaire"}
                     </p>
                   </div>
                 </div>
               ))
             ) : (
-              <p className="text-sm text-gray-500">Aucun commentaire pour le moment.</p>
+              <p className="text-sm text-gray-500">
+                Aucun commentaire pour le moment.
+              </p>
             )}
           </div>
         </div>

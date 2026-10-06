@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import Inputs from "./ui/inputs";
-import Button from "./ui/Button";
+import Button from "./ui/button";
 import { register } from "../services/api";
 import { useState } from "react";
 function RegisterForm() {

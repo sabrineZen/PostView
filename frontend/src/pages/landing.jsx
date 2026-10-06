@@ -1,7 +1,7 @@
 import React from 'react';
 import { HiSparkles} from "react-icons/hi";
 import LandingNavbar from '../components/layouts/landingNavbar.jsx';
-import Button from '../components/ui/Button.jsx'
+import Button from '../components/ui/button.jsx'
 import posts from '../assets/posts.png'
 import communaute from '../assets/communaute.png'
 import Cards  from '../components/cards.jsx';

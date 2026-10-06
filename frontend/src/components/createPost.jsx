@@ -1,6 +1,6 @@
 import { HiPhotograph } from "react-icons/hi";
 import posts from "../assets/posts.png";
-import Button from "./ui/Button";
+import Button from "./ui/button";
 import { createPost } from "../services/api";
 import { useState } from "react";
 

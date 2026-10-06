@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import posts from "../assets/posts.png";
-import Button from "../components/ui/Button";
+import Button from "../components/ui/button";
 import { updateUser } from "../services/api";
 
 function EditProfile() {

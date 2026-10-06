@@ -1,6 +1,6 @@
 import Post from "../components/post";
 import profileImage from "../assets/posts.png";
-import Button from "../components/ui/Button";
+import Button from "../components/ui/button";
 import { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import {

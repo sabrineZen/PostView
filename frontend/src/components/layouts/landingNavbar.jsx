@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { HiOutlineMenu, HiOutlineX } from "react-icons/hi";
 import logo from "../../assets/logo.svg";
-import Button from "../ui/Button.jsx";
+import Button from "../ui/button.jsx";
 import {useNavigate} from "react-router-dom";
 
 

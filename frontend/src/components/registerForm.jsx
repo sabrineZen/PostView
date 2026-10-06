@@ -36,7 +36,7 @@ function RegisterForm() {
           Rejoindre PostView
         </p>
 
-        <p className="text-gray-300 self-start">
+        <p className="text-gray-300 self-start ">
           Crée ton compte et commence à partager.
         </p>
       </div>
@@ -79,7 +79,7 @@ function RegisterForm() {
         color="bg-violet-500"
       />
       <div className="mt-4">
-      <p className="text-bold">deja un compte?
+      <p className="font-bold">deja un compte?
          <button className="text-violet-500 text-bold cursor-pointer"  onClick={loginNavigate}>Se connecter</button>
       </p>
 

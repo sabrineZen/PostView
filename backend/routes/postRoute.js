@@ -1,7 +1,7 @@
 import express from "express";
 import upload from "../middleware/upload.js";
-import { PostNumber, createPost, getAllPosts } from "../controllers/postController.js";
 import { createComment, getCommentsByPost } from "../controllers/commentController.js";
+import { PostNumber, createPost, getAllPosts } from "../controllers/postController.js";
 import { toggleLike, getLikesByPost } from "../controllers/likeController.js";
 const router = express.Router();
 

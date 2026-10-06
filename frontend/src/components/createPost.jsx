@@ -7,6 +7,16 @@ import { useState } from "react";
 function CreatePost() {
   const [content, setContent] = useState("");
   const [image, setImage] = useState(null);
+  const [profilePhoto, setProfilePhoto] = useState(() => {
+    try {
+      const user = JSON.parse(localStorage.getItem("user") || "null");
+      return user?.photoProfil
+        ? `http://localhost:5000/uploads/${user.photoProfil}`
+        : posts;
+    } catch {
+      return posts;
+    }
+  });
 
   const handleSubmit = async () => {
     try {
@@ -42,9 +52,10 @@ function CreatePost() {
 
         {/* Photo de profil */}
         <img
-          src={posts}
+          src={profilePhoto}
           alt="Profil"
           className="h-12 w-12 rounded-full border-2 border-violet-500 object-cover"
+          onError={() => setProfilePhoto(posts)}
         />
 
         {/* Zone de texte */}
